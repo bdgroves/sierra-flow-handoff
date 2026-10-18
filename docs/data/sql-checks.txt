@@ -1,0 +1,56 @@
+CHECKS FOR RUN 2026-10-18
+run_date gages matched
+-------- ----- -------
+2026-10-03 8 8
+2026-10-04 8 8
+2026-10-05 8 8
+2026-10-06 8 8
+2026-10-07 8 8
+2026-10-08 8 8
+2026-10-09 8 8
+2026-10-10 8 8
+2026-10-11 8 8
+2026-10-12 8 8
+2026-10-13 8 8
+2026-10-14 8 8
+2026-10-15 8 8
+2026-10-16 8 8
+2026-10-17 8 8
+2026-10-18 8 8
+SPATIAL    GAGE TO THE NEXT GAGE DOWNSTREAM (STRAIGHT LINE, KM)
+basin seq short_name next_downstream km
+----- --- ---------- --------------- --
+TUOLUMNE 1 Tuolumne R Grand Canyon Tuolumne R nr Hetch Hetchy 12.4
+TUOLUMNE 2 Tuolumne R nr Hetch Hetchy Big Creek nr Groveland 35.6
+TUOLUMNE 3 Big Creek nr Groveland Tuolumne R bl La Grange 29.9
+TUOLUMNE 4 Tuolumne R bl La Grange Tuolumne R at Modesto 48.1
+TUOLUMNE 5 Tuolumne R at Modesto NULL NULL
+MERCED 1 Merced R at Happy Isles Merced R at Pohono Bridge 9.5
+MERCED 2 Merced R at Pohono Bridge NULL NULL
+STANISLAUS 1 Stanislaus R at Ripon NULL NULL
+SPATIAL    NEAREST OTHER GAGE
+short_name nearest km
+---------- ------- --
+Merced R at Happy Isles Merced R at Pohono Bridge 9.5
+Merced R at Pohono Bridge Merced R at Happy Isles 9.5
+Tuolumne R Grand Canyon Tuolumne R nr Hetch Hetchy 12.4
+Tuolumne R nr Hetch Hetchy Tuolumne R Grand Canyon 12.4
+Tuolumne R at Modesto Stanislaus R at Ripon 15.9
+Stanislaus R at Ripon Tuolumne R at Modesto 15.9
+Big Creek nr Groveland Tuolumne R bl La Grange 29.9
+Tuolumne R bl La Grange Big Creek nr Groveland 29.9
+DATA QA    GAPS IN THE DAILY RECORD (LAST 60 DAYS)
+site_id gap_after gap_before missing_days
+------- --------- ---------- ------------
+DATA QA    PROVISIONAL AND APPROVED DAYS, AND VALUES USGS HAS REVISED
+short_name provisional_days approved_days revisions
+---------- ---------------- ------------- ---------
+Tuolumne R Grand Canyon 76 0 0
+Tuolumne R nr Hetch Hetchy 76 0 0
+Big Creek nr Groveland 76 0 0
+Tuolumne R bl La Grange 76 0 57
+Tuolumne R at Modesto 76 0 0
+Merced R at Happy Isles 76 0 0
+Merced R at Pohono Bridge 76 0 0
+Stanislaus R at Ripon 76 0 0
+CHECKS COMPLETE
