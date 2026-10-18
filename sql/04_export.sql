@@ -1,6 +1,7 @@
 -- ============================================================================
 -- 04_export.sql: one JSON document for the web page (docs/data/sql.json).
--- Run with:  sqlcmd ... -h -1 -y 0 -i 04_export.sql
+-- Run with:  sqlcmd ... -y 0 -i 04_export.sql   (sqlcmd refuses -h together with -y 0,
+-- so the caller cuts the JSON out from the first { to the last })
 -- The outer SELECT wraps FOR JSON in a scalar subquery so it comes back as a
 -- single value instead of being split into 2,033-character rows.
 -- ============================================================================
