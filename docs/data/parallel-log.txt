@@ -1,6 +1,6 @@
-JOB PARALLEL   2026-10-18 22:15:16 UTC
+JOB PARALLEL   2026-10-18 22:18:40 UTC
 OLD            cobc (GnuCOBOL) 3.1.2.0 · bdgroves/sierra-flow-cobol @ fae7ab1
-NEW            sierraflow (C#) · .NET 10.0.401
+NEW            sierraflow (C#) · .NET 8.0.426
 
 CASE night    2026-10-03       RC=0000  MATCH     76 lines  replay=prod
 CASE night    2026-10-03       RC=0000  MATCH     76 lines  replay=prod

@@ -1,0 +1,2 @@
+Sqlcmd: The -h and the -y 0 options are mutually exclusive.
+--- stdout (first 2000 chars)
