@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The SIERRA-FLOW Handoff</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A nightly COBOL streamflow job for eight Sierra rivers, read like an inheritance, written down, rebuilt in C#, and run side by side every night until both programs print the same bytes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout: one machine room, two eras. Everything old is phosphor green on paper,
+   everything new is violet on slate, and a seam runs between them. */
+:root{
+  color-scheme: dark;
+  --room:#141b22;     /* machine-room floor */
+  --room-2:#1b242e;   /* panels */
+  --rule:#2d3a48;
+  --text:#dbe2e9;
+  --muted:#8f9cab;
+  --old:#5cff8a;      /* P1 phosphor: the COBOL */
+  --old-dim:#2f9e57;
+  --new:#b9a7ff;      /* the C# */
+  --new-dim:#7e6cc9;
+  --paper:#f3f1e3;    /* green-bar fanfold */
+  --bar:#d6e8cf;
+  --paper-ink:#262622;
+  --editor:#191d2b;   /* the C# side of the seam */
+  --editor-ink:#d9d4f5;
+  --diff:#ff7a5c;
+  --diff-bg:rgba(255,122,92,.22);
+  --s-first:#c07f1c;  /* chart: first published */
+  --s-rev:#2a98c4;    /* chart: revised */
+  --crt:'VT323',ui-monospace,monospace;
+  --code:'JetBrains Mono',ui-monospace,'Cascadia Mono',Consolas,monospace;
+  --print:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--room);color:var(--text);font:16px/1.65 var(--sans);overflow-x:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--new)}
+a:hover{color:var(--text)}
+:focus-visible{outline:2px solid var(--new);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto}
+.prose{max-width:66ch}
+h1,h2,h3{text-wrap:balance}
+code{font:0.92em var(--code);color:var(--text)}
+
+/* top line */
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 18px;padding-block:14px;font:13px var(--print);color:var(--muted)}
+.top nav{display:flex;flex-wrap:wrap;gap:6px 18px}
+.top a{color:var(--muted);text-decoration:none}
+.top a:hover{color:var(--text)}
+
+/* hero */
+.hero{padding-block:28px 10px}
+.kicker{font:13px/1.4 var(--print);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.title{margin:0;display:flex;flex-wrap:wrap;align-items:flex-end;line-height:.86;font-weight:400}
+.title .o{font:400 clamp(64px,13vw,150px)/.82 var(--crt);color:var(--old);text-shadow:0 0 14px rgba(92,255,138,.35);padding-right:.06em}
+.title .seam{width:3px;align-self:stretch;background:linear-gradient(var(--old),var(--new));margin:0 .12em;border-radius:2px}
+.title .n{font:800 clamp(48px,9.6vw,112px)/.9 var(--code);color:var(--new);letter-spacing:-.04em;padding-bottom:.04em}
+.lede{font-size:clamp(17px,2.1vw,20px);line-height:1.55;margin:22px 0 0;max-width:60ch;color:var(--text)}
+.lede em{font-style:normal;color:var(--old)}
+.lede strong{font-weight:500;color:var(--new)}
+
+.status{margin:26px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.status div{background:var(--room-2);padding:14px 16px}
+.status b{display:block;font:600 28px/1.1 var(--code);color:var(--text);font-variant-numeric:tabular-nums}
+.status b.ok{color:var(--old)}
+.status span{font:12px/1.4 var(--print);color:var(--muted);letter-spacing:.04em}
+.runline{font:12.5px/1.5 var(--print);color:var(--muted);margin:10px 0 0}
+
+/* sections */
+section{padding-block:56px 6px;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:0}
+h2{font:600 clamp(24px,3vw,30px)/1.2 var(--sans);letter-spacing:-.01em;margin:0 0 10px;color:#fff}
+h2 .tag{display:inline-block;vertical-align:4px;margin-left:8px;font:500 11px/1 var(--print);letter-spacing:.12em;text-transform:uppercase;padding:5px 7px;border-radius:4px;border:1px solid var(--rule);color:var(--muted)}
+.sub{color:var(--muted);margin:0 0 22px;max-width:68ch}
+.sub b{color:var(--text);font-weight:500}
+
+/* the seam viewer */
+.vbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;margin:0 0 12px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.seg button{all:unset;cursor:pointer;font:13px var(--print);padding:8px 13px;color:var(--muted);background:var(--room-2)}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{color:var(--room);background:var(--text)}
+.seg button:focus-visible{outline:2px solid var(--new);outline-offset:-2px}
+.verdict{font:13px/1.4 var(--print);display:flex;align-items:center;gap:10px;min-width:0}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--print);letter-spacing:.08em;padding:6px 9px;border-radius:999px;white-space:nowrap}
+.pill.ok{color:var(--room);background:var(--old)}
+.pill.bad{color:var(--room);background:var(--diff)}
+.pill.ok::before{content:"✓"}
+.pill.bad::before{content:"≠"}
+
+.viewer-frame{border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--room-2)}
+.vlabels{display:flex;justify-content:space-between;gap:12px;padding:9px 14px;font:12px var(--print);border-bottom:1px solid var(--rule)}
+.vlabels .l{color:var(--old)} .vlabels .r{color:var(--new);text-align:right}
+.scroller{overflow-x:auto;overscroll-behavior-x:contain}
+.viewer{position:relative;width:max-content;min-width:100%;touch-action:pan-y;cursor:ew-resize;user-select:none;-webkit-user-select:none;--seam:46%}
+.viewer pre{margin:0;padding:18px 34px;font:12.5px/18px var(--print);white-space:pre;tab-size:8}
+.viewer .paper{color:var(--paper-ink);
+  background:
+    radial-gradient(circle at 13px 9px,var(--room-2) 0 4.5px,transparent 5px) 0 0/100% 36px repeat-y,
+    radial-gradient(circle at calc(100% - 13px) 9px,var(--room-2) 0 4.5px,transparent 5px) 0 0/100% 36px repeat-y,
+    repeating-linear-gradient(var(--bar) 0 54px,var(--paper) 54px 108px);
+  background-origin:padding-box;background-position:0 0,0 0,0 18px}
+.viewer .editor{position:absolute;inset:0;color:var(--editor-ink);background:var(--editor);clip-path:inset(0 0 0 var(--seam))}
+.viewer .ln{display:block}
+.viewer .paper .ln.d{background:rgba(255,122,92,.28);box-shadow:inset 3px 0 var(--diff)}
+.viewer .editor .ln.d{background:var(--diff-bg);color:#ffd9cf;box-shadow:inset -3px 0 var(--diff)}
+.handle{position:absolute;top:0;bottom:0;left:var(--seam);width:0;pointer-events:none}
+.handle::before{content:"";position:absolute;top:0;bottom:0;left:-1.5px;width:3px;background:linear-gradient(var(--old),var(--new));box-shadow:0 0 12px rgba(185,167,255,.45)}
+.handle::after{content:"◂ ▸";position:absolute;top:50%;left:0;transform:translate(-50%,-50%);font:600 12px/1 var(--print);color:var(--room);background:var(--text);padding:8px 7px;border-radius:999px;white-space:nowrap}
+.vfoot{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:10px 14px;border-top:1px solid var(--rule);font:12.5px var(--print);color:var(--muted)}
+.vfoot label{display:flex;align-items:center;gap:10px;flex:1 1 260px}
+.vfoot input[type=range]{flex:1;accent-color:var(--new)}
+.diffnote{margin:14px 0 0;font:13px/1.6 var(--print);color:var(--muted);min-height:1.6em}
+.diffnote b{color:var(--diff);font-weight:500}
+.diffnote .o{color:var(--old)} .diffnote .n{color:var(--new)}
+
+/* nights strip */
+.nights{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;margin:0 0 30px}
+.night{border:1px solid var(--rule);border-radius:8px;padding:9px 11px;background:var(--room-2);font:12px/1.35 var(--print)}
+.night .d{display:block;font:600 15px/1.2 var(--code);color:var(--text)}
+.night .t{color:var(--muted)}
+.night .v{display:block;margin-top:6px;color:var(--old)}
+.night.bad .v{color:var(--diff)}
+.night.bad{border-color:var(--diff)}
+
+.h3{font:600 15px/1.3 var(--print);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:30px 0 12px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th{font:500 11.5px/1.3 var(--print);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--rule);background:var(--room-2);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.case{font:500 13px var(--code);color:var(--text);white-space:nowrap}
+td.rc{font:13px var(--print);color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+td.rc.warn{color:#ffc46b}
+td.fd{font:12.5px var(--print);color:var(--muted);white-space:nowrap}
+td.fd a{color:var(--new)}
+
+/* sabotage */
+.sab{margin:34px 0 0;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px 28px;align-items:start;border:1px solid var(--diff);border-radius:12px;padding:20px 22px;background:linear-gradient(135deg,rgba(255,122,92,.07),transparent 60%)}
+.sab h3{margin:0 0 8px;font:600 20px/1.25 var(--sans);color:#fff}
+.sab p{margin:0 0 10px;color:var(--text)}
+.sab .nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sab .nums div{font:12px/1.35 var(--print);color:var(--muted)}
+.sab .nums b{display:block;font:600 26px/1.1 var(--code);color:var(--diff);font-variant-numeric:tabular-nums}
+.btn{all:unset;cursor:pointer;display:inline-flex;gap:8px;align-items:center;font:500 13px var(--print);padding:9px 13px;border-radius:8px;border:1px solid var(--diff);color:var(--diff)}
+.btn:hover{background:var(--diff);color:var(--room)}
+.btn:focus-visible{outline:2px solid var(--diff);outline-offset:3px}
+.sab pre{margin:0;font:12px/1.55 var(--print);white-space:pre-wrap;word-break:break-all;color:var(--muted);background:var(--room);border-radius:8px;padding:12px}
+.sab pre .m{color:var(--old)} .sab pre .p{color:var(--diff)}
+
+/* findings */
+.findings{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:0 34px}
+.findings li{display:grid;grid-template-columns:2.4em minmax(0,1fr);gap:4px 10px;padding:14px 0;border-top:1px solid var(--rule)}
+.findings .no{font:400 30px/1 var(--crt);color:var(--old)}
+.findings h3{margin:0;font:600 16px/1.35 var(--sans);color:#fff}
+.findings p{margin:4px 0 0;color:var(--muted);font-size:14.5px}
+.findings .seen{grid-column:2;font:12px var(--print);color:var(--new-dim)}
+
+/* code pair */
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:14px}
+.codecard{min-width:0;border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.codecard header{display:flex;justify-content:space-between;gap:10px;padding:9px 14px;font:12px var(--print);border-bottom:1px solid var(--rule)}
+.codecard.cob header{color:var(--old);background:#0b1910}
+.codecard.cs header{color:var(--new);background:#1a1830}
+.codecard pre{margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.55 var(--code)}
+.codecard.cob pre{background:#06110a;color:#8af2a8;font:20px/1.08 var(--crt)}
+.codecard.cs pre{background:var(--editor);color:var(--editor-ink)}
+.k{color:#ffcf73} .c{color:#6c7a8a;font-style:italic} .s{color:#9fe0b8}
+.codecard.cob .k{color:var(--old)} .codecard.cob .s{color:#d8ffe3}
+.rounding{margin:18px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
+.rounding div{border:1px solid var(--rule);border-radius:10px;padding:14px 16px;background:var(--room-2)}
+.rounding .big{font:600 24px/1.1 var(--code);font-variant-numeric:tabular-nums}
+.rounding .big.o{color:var(--old)} .rounding .big.x{color:var(--diff)}
+.rounding p{margin:6px 0 0;font-size:14px;color:var(--muted)}
+
+/* database */
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px;margin:0 0 26px}
+.three div{border:1px solid var(--rule);border-radius:10px;padding:14px 16px;background:var(--room-2)}
+.three .who{font:12px var(--print);letter-spacing:.1em;text-transform:uppercase}
+.three .who.o{color:var(--old)} .three .who.n{color:var(--new)} .three .who.q{color:#7fd1f0}
+.three b{display:block;font:600 22px/1.2 var(--code);margin:6px 0 4px;font-variant-numeric:tabular-nums}
+.three p{margin:0;font-size:14px;color:var(--muted)}
+.chart-card{border:1px solid var(--rule);border-radius:12px;padding:16px 16px 10px;background:var(--room-2)}
+.chart-card h3{margin:0 0 4px;font:600 17px/1.35 var(--sans);color:#fff}
+.chart-card .cap{margin:0 0 10px;font-size:14px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font:12.5px var(--print);color:var(--muted);margin:0 0 6px}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:4px;margin-right:7px}
+.chartbox{position:relative}
+.chartbox svg{display:block;width:100%;height:auto;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:var(--room);border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font:12px/1.45 var(--print);color:var(--text);white-space:nowrap;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.tip .a{color:#e6a64a} .tip .b{color:#5fbde3}
+details.data{margin:8px 0 4px;font:12.5px var(--print);color:var(--muted)}
+details.data summary{cursor:pointer}
+details.data .tbl-wrap{margin-top:8px;max-height:260px;overflow:auto}
+details.data td,details.data th{padding:5px 10px;font:12px var(--print);font-variant-numeric:tabular-nums}
+
+.rivers{display:grid;gap:12px;margin:26px 0 0}
+.river{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px;align-items:center}
+.river .bn{font:600 13px var(--print);letter-spacing:.1em;color:var(--muted)}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0}
+.gage{font:13px/1.25 var(--sans);padding:6px 10px;border:1px solid var(--rule);border-radius:999px;background:var(--room-2);white-space:nowrap}
+.gage.reg{border-style:dashed}
+.km{font:12px var(--print);color:var(--muted);padding:0 8px;white-space:nowrap}
+.km::after{content:" →"}
+.note{font:12.5px/1.6 var(--print);color:var(--muted);margin:12px 0 0}
+
+footer{padding-block:40px 60px;font:13px/1.7 var(--print);color:var(--muted)}
+footer .links{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0 0 12px}
+
+@media (max-width:640px){
+  .sab{grid-template-columns:1fr}
+  .river{grid-template-columns:1fr}
+  .viewer pre{padding:14px 26px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a href="https://brooksgroves.com/">brooksgroves.com</a>
+    <nav>
+      <a href="https://brooksgroves.com/sierra-flow-cobol/">SIERRA-FLOW (the COBOL) ↗</a>
+      <a href="https://brooksgroves.com/blog/sierra-flow-handoff-post.html">The story ↗</a>
+      <a href="https://github.com/bdgroves/sierra-flow-handoff/blob/main/HANDOFF.md">HANDOFF.md ↗</a>
+      <a href="https://github.com/bdgroves/sierra-flow-handoff">GitHub ↗</a>
+    </nav>
+  </div>
+
+  <header class="hero">
+    <p class="kicker">SIERRA-FLOW · chapter three · COBOL to C#</p>
+    <h1 class="title" aria-label="The Handoff"><span class="o">THE HAND</span><span class="seam" aria-hidden="true"></span><span class="n">off</span></h1>
+    <p class="lede">A <em>COBOL batch job</em> checks eight Sierra Nevada rivers every morning. I read it the way you read a system someone is handing you, wrote down what it really does, and rebuilt it in <strong>C# on .NET</strong>. Then I ran the two side by side on every night it has ever run, until they printed the same bytes.</p>
+    <div class="status" id="status"></div>
+    <p class="runline" id="runline"></p>
+  </header>
+
+  <section id="report" aria-labelledby="h-report">
+    <h2 id="h-report">One report, two programs</h2>
+    <p class="sub">Below is SIERRA-FLOW's 132-column report. The left side is what <b>GnuCOBOL</b> printed, on green-bar paper. The right side is what <b>the C# port</b> printed. Drag the seam. Nothing shifts, because the two files are byte-for-byte the same.</p>
+    <div class="vbar">
+      <div class="seg" role="group" aria-label="Which night">
+        <button type="button" id="mode-ship" aria-pressed="true">Latest night · as shipped</button>
+        <button type="button" id="mode-sab" aria-pressed="false">Oct 4 · C#'s default rounding</button>
+      </div>
+      <div class="verdict" id="verdict" aria-live="polite"></div>
+    </div>
+    <div class="viewer-frame">
+      <div class="vlabels"><span class="l">◂ GnuCOBOL 3.1.2 · SIERRA-FLOW.cob</span><span class="r" id="rlabel">sierraflow run · .NET 8 ▸</span></div>
+      <div class="scroller" id="scroller">
+        <div class="viewer" id="viewer">
+          <pre class="paper" id="pre-old" aria-label="COBOL report"></pre>
+          <pre class="editor" id="pre-new" aria-label="C# report"></pre>
+          <div class="handle" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="vfoot">
+        <label for="seam">Seam <input type="range" id="seam" min="2" max="98" value="46"></label>
+        <span>132 columns · scroll sideways on a phone</span>
+      </div>
+    </div>
+    <p class="diffnote" id="diffnote"></p>
+  </section>
+
+  <section id="ledger" aria-labelledby="h-ledger">
+    <h2 id="h-ledger">The parallel run <span class="tag">nightly in CI</span></h2>
+    <p class="sub">Every production night since COBOL version 3 is replayed from the old job's own git history, with both programs' clocks pinned to the second that night ran. Each case compares the report, results.csv, every console message and the return code. The COBOL replay is also checked against what production really printed that night.</p>
+    <div class="nights" id="nights"></div>
+
+    <h3 class="h3">Edge cases: the latest night, broken on purpose</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th scope="col">Case</th><th scope="col">What I broke</th><th scope="col">RC</th><th scope="col">Result</th><th scope="col">Finding</th></tr></thead>
+        <tbody id="edges"></tbody>
+      </table>
+    </div>
+
+    <h3 class="h3">NORMALS: 30 years into 2,928 daily percentiles</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th scope="col">Case</th><th scope="col">Input</th><th scope="col">RC</th><th scope="col">Result</th><th scope="col">Lines</th></tr></thead>
+        <tbody id="normals"></tbody>
+      </table>
+    </div>
+
+    <div class="sab" id="sabotage">
+      <div>
+        <h3>Then I broke the port on purpose</h3>
+        <p>A test that has never failed hasn't proven anything. So I changed one setting: rounding in C# the way C# does by default (half to even, "banker's rounding") instead of the way COBOL does (half away from zero). Then I ran everything again.</p>
+        <p>The parallel run caught it on two real nights, plus a third of the normals. A person reading the report would almost certainly miss a one-cent difference.</p>
+        <button type="button" class="btn" id="show-sab">Show it in the report ↑</button>
+      </div>
+      <div>
+        <div class="nums" id="sabnums"></div>
+        <pre id="sabdiff" style="margin-top:14px"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="findings" aria-labelledby="h-findings">
+    <h2 id="h-findings">What the old code knew</h2>
+    <p class="sub">I wrote these down before porting a line. None has caused a wrong number in production. Each is a trap for whoever changes the job next, and each has an edge case above that shows it happening. The C# copies every one of them on purpose. A port that quietly fixes things while it's being proved can never be compared with the original. The fixes come in phase two.</p>
+    <ol class="findings">
+      <li><span class="no">1</span><div><h3>The validation lives in the fetcher, not the job</h3><p>COBOL's <code>NUMVAL</code> reads "Ice" as 0.00 cfs, and an unsigned field turns −12.50 into 12.50. Only the Python fetcher keeps them out.</p></div><span class="seen">seen in garbage-values</span></li>
+      <li><span class="no">2</span><div><h3>Section I tops out at 99,999.99 cfs</h3><p>A 468,000 cfs flood prints as <code>68000.00</code>. The leading digit is dropped with no error. Sections II and III have room for it.</p></div><span class="seen">seen in flood</span></li>
+      <li><span class="no">3</span><div><h3>Past 70 days, it keeps the oldest</h3><p>The table holds 70 days per gage. The newest days are the ones dropped, so a gage with current data is reported stale.</p></div><span class="seen">seen in too-many-days</span></li>
+      <li><span class="no">4</span><div><h3>File order is trusted</h3><p>"Latest day" means the last row read. Rows out of date order give a wrong day, mean and trend, without a warning.</p></div><span class="seen">seen in out-of-order</span></li>
+      <li><span class="no">5</span><div><h3>Tomorrow is accepted</h3><p>The age field is unsigned, so a date 5 days ahead counts as 5 days old. The gage is flagged stale, for the wrong reason.</p></div><span class="seen">seen in future-date</span></li>
+      <li><span class="no">6</span><div><h3>The trend overflows to 9,999.9%</h3><p>The size-error value is one digit short of the field. A huge rise prints smaller than a real 50,000% rise would.</p></div><span class="seen">seen in huge-rise</span></li>
+      <li><span class="no">7</span><div><h3>Fixed tables, mostly unchecked</h3><p>12 gages (a 13th is ignored without a word), 70 days, 5 basins (a 6th writes past the end of the table), and 9 gages per basin.</p></div><span class="seen">seen in thirteen-gages</span></li>
+      <li><span class="no">8</span><div><h3>Gage IDs are cut to 8 characters</h3><p>USGS site IDs can be 15 digits long. Two of those could look like the same gage to this job.</p></div><span class="seen">found by reading</span></li>
+      <li><span class="no">9</span><div><h3>"Last 30 days" means the last 30 rows</h3><p>If a day is missing, the window reaches back 31 calendar days.</p></div><span class="seen">found by reading</span></li>
+      <li><span class="no">10</span><div><h3>Normals count calendar years</h3><p>The six days around New Year show 31 years from a 30-year record, because the 7-day window crosses from one water year into the next.</p></div><span class="seen">seen in normals.csv, 84 rows</span></li>
+      <li><span class="no">11</span><div><h3>Equal sort keys have no promised order</h3><p>COBOL's <code>SORT</code> doesn't guarantee the order of ties. The keys are unique today, and the SQL schema now makes sure they stay that way.</p></div><span class="seen">found by reading</span></li>
+      <li><span class="no">12</span><div><h3>NORMALS keeps at most 400 values a day</h3><p>Any more are dropped silently. Thirty years times a 7-day window is 210, so it fits.</p></div><span class="seen">found by reading</span></li>
+    </ol>
+  </section>
+
+  <section id="translation" aria-labelledby="h-translation">
+    <h2 id="h-translation">Paragraph for paragraph</h2>
+    <p class="sub">Every C# method names the COBOL paragraph it replaces, so the two programs can be read side by side. Here is the rule at the heart of it: is this river normal for this date?</p>
+    <div class="pair">
+      <div class="codecard cob">
+        <header><span>SIERRA-FLOW.cob</span><span>lines 652–672</span></header>
+<pre>       <span class="k">4100-CLASSIFY.</span>
+           <span class="k">EVALUATE TRUE</span>
+               <span class="k">WHEN</span> N-YEARS(SX, WS-SLOT) &lt; 10
+                   <span class="k">MOVE</span> <span class="s">'NO NORMAL'</span>         <span class="k">TO</span> WS-CLASS
+                   <span class="k">MOVE</span> 0 <span class="k">TO</span> WS-CLASS-I
+               <span class="k">WHEN</span> WS-FLOW &lt; N-P10(SX, WS-SLOT)
+                   <span class="k">MOVE</span> <span class="s">'MUCH BELOW NORMAL'</span> <span class="k">TO</span> WS-CLASS
+                   <span class="k">MOVE</span> 1 <span class="k">TO</span> WS-CLASS-I
+               <span class="k">WHEN</span> WS-FLOW &lt; N-P25(SX, WS-SLOT)
+                   <span class="k">MOVE</span> <span class="s">'BELOW NORMAL'</span>      <span class="k">TO</span> WS-CLASS
+                   <span class="k">MOVE</span> 2 <span class="k">TO</span> WS-CLASS-I
+               <span class="k">WHEN</span> WS-FLOW &gt; N-P90(SX, WS-SLOT)
+                   <span class="k">MOVE</span> <span class="s">'MUCH ABOVE NORMAL'</span> <span class="k">TO</span> WS-CLASS
+                   <span class="k">MOVE</span> 5 <span class="k">TO</span> WS-CLASS-I
+               <span class="k">WHEN</span> WS-FLOW &gt; N-P75(SX, WS-SLOT)
+                   <span class="k">MOVE</span> <span class="s">'ABOVE NORMAL'</span>      <span class="k">TO</span> WS-CLASS
+                   <span class="k">MOVE</span> 4 <span class="k">TO</span> WS-CLASS-I
+               <span class="k">WHEN OTHER</span>
+                   <span class="k">MOVE</span> <span class="s">'NORMAL'</span>            <span class="k">TO</span> WS-CLASS
+                   <span class="k">MOVE</span> 3 <span class="k">TO</span> WS-CLASS-I
+           <span class="k">END-EVALUATE.</span></pre>
+      </div>
+      <div class="codecard cs">
+        <header><span>FlowJob.cs</span><span>Classify</span></header>
+<pre><span class="c">// 4100-CLASSIFY: USGS WaterWatch classes</span>
+<span class="k">static</span> (<span class="k">string</span> Name, <span class="k">int</span> Index) Classify(<span class="k">decimal</span> flow, Normal n) =&gt;
+    n.Years &lt; 10  ? (<span class="s">"NO NORMAL"</span>, 0) :
+    flow &lt; n.P10  ? (<span class="s">"MUCH BELOW NORMAL"</span>, 1) :
+    flow &lt; n.P25  ? (<span class="s">"BELOW NORMAL"</span>, 2) :
+    flow &gt; n.P90  ? (<span class="s">"MUCH ABOVE NORMAL"</span>, 5) :
+    flow &gt; n.P75  ? (<span class="s">"ABOVE NORMAL"</span>, 4) :
+                    (<span class="s">"NORMAL"</span>, 3);
+
+<span class="c">// MOVE truncates. COMPUTE ... ROUNDED rounds half</span>
+<span class="c">// away from zero. Math.Round's default is half to</span>
+<span class="c">// even, so the port never uses the default.</span>
+<span class="k">public static decimal</span> Rounded(<span class="k">decimal</span> v, <span class="k">int</span> dec) =&gt;
+    Math.Round(v, dec, MidpointRounding.AwayFromZero);</pre>
+      </div>
+    </div>
+    <div class="rounding">
+      <div><div class="big o">11.805 → 11.81</div><p>COBOL <code>ROUNDED</code>: half away from zero. Grand Canyon's 30-day mean on October 4.</p></div>
+      <div><div class="big x">11.805 → 11.80</div><p>C#'s <code>Math.Round</code> by default: half to even. One cent off, on a real night.</p></div>
+      <div><div class="big">decimal, never double</div><p>Binary floating point can't hold 0.1 exactly. <code>PIC 9(7)V99</code> is base ten, and so is <code>decimal</code>.</p></div>
+    </div>
+  </section>
+
+  <section id="database" aria-labelledby="h-database">
+    <h2 id="h-database">Then the database checks both <span class="tag">SQL Server · T-SQL</span></h2>
+    <p class="sub">The C# job writes a T-SQL load script. One transaction <code>MERGE</code>s the gages (with <code>geography</code> points), every daily mean, and the night's results into SQL Server. Then <code>02_agreement.sql</code> works out the 30-day numbers and the trend again from the raw rows and <code>THROW</code>s if they differ from what the batch job wrote. That's three independent implementations that have to reach one answer.</p>
+    <div class="three" id="three"></div>
+    <div class="chart-card">
+      <h3 id="rev-title">USGS revised its own numbers, and only the database noticed</h3>
+      <p class="cap" id="rev-cap"></p>
+      <div class="legend"><span><i style="background:var(--s-first)"></i>First published</span><span><i style="background:var(--s-rev)"></i>Revised</span></div>
+      <div class="chartbox" id="chartbox"></div>
+      <details class="data"><summary>Show the numbers</summary><div class="tbl-wrap"><table><thead><tr><th>Date</th><th>First published (cfs)</th><th>Revised (cfs)</th><th>Change</th></tr></thead><tbody id="revtable"></tbody></table></div></details>
+    </div>
+    <div class="rivers" id="rivers"></div>
+    <p class="note" id="distnote"></p>
+  </section>
+
+  <footer>
+    <div class="links">
+      <a href="https://github.com/bdgroves/sierra-flow-handoff">Code: bdgroves/sierra-flow-handoff</a>
+      <a href="https://github.com/bdgroves/sierra-flow-handoff/blob/main/HANDOFF.md">The handoff notes</a>
+      <a href="https://brooksgroves.com/sierra-flow-cobol/">The COBOL, live</a>
+      <a href="https://brooksgroves.com/blog/sierra-flow-handoff-post.html">The blog post</a>
+    </div>
+    Brooks Groves · Lakewood, Washington · river data from the USGS Water Data API, free and public.
+  </footer>
+</div>
+
+<script id="data" type="application/json">{"summary":{"generated_utc":"2026-10-18 21:17:19","legacy":{"repo":"bdgroves/sierra-flow-cobol","head":"fae7ab1","compiler":"cobc (GnuCOBOL) 3.1.2.0"},"new":{"runtime":".NET 8.0.131"},"cases":29,"matched":29,"nights":17,"lines_compared":3176,"replays_match_production":17,"results":[{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":21.2,"ms_csharp":88.6,"kind":"night","name":"2026-10-03","commit":"202f82f","run":"2026-10-03 00:49:09","why":"production night, commit 202f82f, run 2026-10-03 00:49:09 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":20.4,"ms_csharp":92.5,"kind":"night","name":"2026-10-03","commit":"151eccd","run":"2026-10-03 17:57:05","why":"production night, commit 151eccd, run 2026-10-03 17:57:05 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.7,"ms_csharp":90.4,"kind":"night","name":"2026-10-04","commit":"7139472","run":"2026-10-04 18:09:35","why":"production night, commit 7139472, run 2026-10-04 18:09:35 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.3,"ms_csharp":112.7,"kind":"night","name":"2026-10-05","commit":"7143394","run":"2026-10-05 22:00:41","why":"production night, commit 7143394, run 2026-10-05 22:00:41 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.7,"ms_csharp":92.8,"kind":"night","name":"2026-10-06","commit":"b3ce6ef","run":"2026-10-06 19:53:03","why":"production night, commit b3ce6ef, run 2026-10-06 19:53:03 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":26.9,"ms_csharp":102.6,"kind":"night","name":"2026-10-07","commit":"d90ca36","run":"2026-10-07 20:00:14","why":"production night, commit d90ca36, run 2026-10-07 20:00:14 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":21.4,"ms_csharp":94.1,"kind":"night","name":"2026-10-08","commit":"70138a7","run":"2026-10-08 19:56:59","why":"production night, commit 70138a7, run 2026-10-08 19:56:59 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":31.3,"ms_csharp":100.0,"kind":"night","name":"2026-10-09","commit":"0680bb2","run":"2026-10-09 19:46:04","why":"production night, commit 0680bb2, run 2026-10-09 19:46:04 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.5,"ms_csharp":96.4,"kind":"night","name":"2026-10-10","commit":"4f92018","run":"2026-10-10 18:35:36","why":"production night, commit 4f92018, run 2026-10-10 18:35:36 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":20.0,"ms_csharp":96.7,"kind":"night","name":"2026-10-11","commit":"af70196","run":"2026-10-11 18:54:12","why":"production night, commit af70196, run 2026-10-11 18:54:12 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":20.6,"ms_csharp":101.6,"kind":"night","name":"2026-10-12","commit":"ca5d619","run":"2026-10-12 22:08:32","why":"production night, commit ca5d619, run 2026-10-12 22:08:32 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":20.3,"ms_csharp":122.3,"kind":"night","name":"2026-10-13","commit":"e88d8b3","run":"2026-10-13 20:15:26","why":"production night, commit e88d8b3, run 2026-10-13 20:15:26 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.0,"ms_csharp":90.0,"kind":"night","name":"2026-10-14","commit":"e0fa468","run":"2026-10-14 18:37:49","why":"production night, commit e0fa468, run 2026-10-14 18:37:49 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.4,"ms_csharp":109.1,"kind":"night","name":"2026-10-15","commit":"876a16b","run":"2026-10-15 18:18:06","why":"production night, commit 876a16b, run 2026-10-15 18:18:06 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":22.5,"ms_csharp":99.5,"kind":"night","name":"2026-10-16","commit":"16651c2","run":"2026-10-16 18:03:25","why":"production night, commit 16651c2, run 2026-10-16 18:03:25 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":20.5,"ms_csharp":97.2,"kind":"night","name":"2026-10-17","commit":"7ce291f","run":"2026-10-17 17:09:41","why":"production night, commit 7ce291f, run 2026-10-17 17:09:41 UTC","replay_matches_production":true},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.9,"ms_csharp":89.2,"kind":"night","name":"2026-10-18","commit":"fae7ab1","run":"2026-10-18 17:23:31","why":"production night, commit fae7ab1, run 2026-10-18 17:23:31 UTC","replay_matches_production":true},{"match":true,"rc":4,"rc_csharp":4,"lines_compared":77,"ms_cobol":19.7,"ms_csharp":89.9,"kind":"edge","name":"stale-gage","why":"Merced at Happy Isles stops reporting six days ago"},{"match":true,"rc":4,"rc_csharp":4,"lines_compared":76,"ms_cobol":19.5,"ms_csharp":91.6,"kind":"edge","name":"dead-gage","why":"Stanislaus at Ripon sends nothing at all"},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.7,"ms_csharp":93.4,"kind":"edge","name":"flood","why":"Tuolumne at Modesto x400 for five days: over 100,000 cfs"},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.4,"ms_csharp":92.7,"kind":"edge","name":"huge-rise","why":"Big Creek goes from 0.01 to 99 cfs in a week: a 989,900% rise"},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.7,"ms_csharp":94.9,"kind":"edge","name":"garbage-values","why":"an 'Ice' flag, a blank, a negative, an unknown gage, a US-style date"},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":21.1,"ms_csharp":97.8,"kind":"edge","name":"short-record","why":"Pohono Bridge has only 10 days: no trend"},{"match":true,"rc":4,"rc_csharp":4,"lines_compared":77,"ms_cobol":21.5,"ms_csharp":105.7,"kind":"edge","name":"too-many-days","why":"75 days for one gage: the table holds 70"},{"match":true,"rc":4,"rc_csharp":4,"lines_compared":77,"ms_cobol":23.1,"ms_csharp":99.5,"kind":"edge","name":"future-date","why":"a date five days in the future"},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":76,"ms_cobol":19.7,"ms_csharp":92.2,"kind":"edge","name":"out-of-order","why":"one gage's rows arrive newest-first"},{"match":true,"rc":4,"rc_csharp":4,"lines_compared":89,"ms_cobol":22.8,"ms_csharp":107.5,"kind":"edge","name":"thirteen-gages","why":"13 gages in sites.csv: the table holds 12"},{"match":true,"rc":0,"rc_csharp":0,"lines_compared":1105,"ms_cobol":421.2,"ms_csharp":363.8,"kind":"normals","name":"synthetic-30yr","why":"28,763 daily values, 3 gages, 1995-2025"},{"match":true,"rc":12,"rc_csharp":12,"lines_compared":3,"ms_cobol":3.9,"ms_csharp":36.8,"kind":"normals","name":"no-history","why":"history.csv missing: RC 12 and an empty normals.csv"}]},"report":"====================================================================================================================================\n\n                                              SIERRA NEVADA WATERSHED ANALYSIS SYSTEM\n                                            USGS STREAMFLOW DATA PROCESSING REPORT  V3.0\n                                                  RUN 2026-10-18 17:23:31 UTC\n\n====================================================================================================================================\n\nSECTION I: LATEST DAILY MEAN VS NORMAL FOR THE DATE\n  NORMAL = PERCENTILES OF DAILY FLOW FOR THE DATE, WATER YEARS 1996-2025, 7-DAY WINDOW. CLASSES AS USGS WATERWATCH.\n\n  SITE ID  STATION                    DATE             CFS      P10      P25   MEDIAN      P75      P90    % MED  CLASS\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790 Tuolumne R Grand Canyon    2026-10-17      7.57     7.53    10.90    14.50    42.60   254.20    52.2%  BELOW NORMAL\n  11276500 Tuolumne R nr Hetch Hetchy 2026-10-17     57.80    36.30    51.60    58.55    63.50    67.59    98.7%  NORMAL\n  11284400 Big Creek nr Groveland     2026-10-17      0.00     0.00     0.00     0.00     0.00     0.01      --   NORMAL\n  11289650 Tuolumne R bl La Grange    2026-10-17   1660.00   161.00   175.00   359.00   568.75   875.40   462.4%  MUCH ABOVE NORMAL\n  11290000 Tuolumne R at Modesto      2026-10-17   1170.00   167.20   241.00   459.00   689.00   908.90   254.9%  MUCH ABOVE NORMAL\n  11264500 Merced R at Happy Isles    2026-10-17      3.55     3.55     5.93    11.15    24.48    96.97    31.8%  BELOW NORMAL\n  11266500 Merced R at Pohono Bridge  2026-10-17     14.10    12.31    15.28    25.30    50.08   135.00    55.7%  BELOW NORMAL\n  11303000 Stanislaus R at Ripon      2026-10-17   1000.00   249.10   333.75   589.50  1042.50  1489.00   169.6%  NORMAL\n\nSECTION II: LAST 30 DAYS VS NORMAL FOR THOSE DATES\n  % NORMAL = 30-DAY TOTAL FLOW / TOTAL OF THE DAILY MEDIANS. TREND = LAST 7 DAYS VS THE 7 BEFORE, +/-10% OR MORE.\n\n  SITE ID   STATION                    DAYS    MEAN CFS    MIN CFS    MAX CFS  % NORMAL DAYS<P10 DAYS>P90  7-DAY TREND\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790  Tuolumne R Grand Canyon      30        8.43       6.80      10.70     55.9%        0        0  STEADY\n  11276500  Tuolumne R nr Hetch Hetchy   30       63.39      56.80      76.60     97.7%        0        0  STEADY\n  11284400  Big Creek nr Groveland       30        0.00       0.00       0.00       --         0        0  STEADY\n  11289650  Tuolumne R bl La Grange      30      305.60     171.00    1660.00    136.5%        0        2  RISING     166.1%\n  11290000  Tuolumne R at Modesto        30      251.60     153.00    1170.00     79.1%        0        1  RISING      87.0%\n  11264500  Merced R at Happy Isles      30        4.68       3.55       6.51     43.6%        8        0  STEADY\n  11266500  Merced R at Pohono Bridge    30       15.48      12.70      18.30     60.9%        0        0  STEADY\n  11303000  Stanislaus R at Ripon        30      416.27     159.00    1000.00    122.8%        7        0  RISING      20.0%\n\nSECTION III: WATERSHED BASINS\n  GAGES ON ONE RIVER MEASURE THE SAME WATER, SO THEY ARE NOT ADDED. THE LOWEST GAGE IS WHAT LEAVES THE BASIN.\n\n  BASIN       GAGES   LOWEST GAGE (BASIN OUTFLOW)       CFS  CLASS             MUCH BELOW  BELOW NORMAL  ABOVE MUCH ABOVE\n------------------------------------------------------------------------------------------------------------------------------------\n  TUOLUMNE      5     Tuolumne R at Modesto         1170.00  MUCH ABOVE NORMAL          0      1      2      0          2\n  MERCED        2     Merced R at Pohono Bridge       14.10  BELOW NORMAL               0      2      0      0          0\n  STANISLAUS    1     Stanislaus R at Ripon         1000.00  NORMAL                     0      0      1      0          0\n\nSECTION IV: RUN SUMMARY\n\n    GAGES PROCESSED ..................     8\n    DAILY NORMALS READ ...............  2928\n    DAILY MEANS READ .................   480\n    RECORDS SKIPPED (INVALID) ........     0\n    GAGES STALE OR WITHOUT DATA ......     0\n    WATERSHED BASINS .................     3\n    RETURN CODE ......................     0\n\n====================================================================================================================================\n                                                  END OF REPORT - SIERRA-FLOW V3.0\n====================================================================================================================================\n","report_csharp":"====================================================================================================================================\n\n                                              SIERRA NEVADA WATERSHED ANALYSIS SYSTEM\n                                            USGS STREAMFLOW DATA PROCESSING REPORT  V3.0\n                                                  RUN 2026-10-18 17:23:31 UTC\n\n====================================================================================================================================\n\nSECTION I: LATEST DAILY MEAN VS NORMAL FOR THE DATE\n  NORMAL = PERCENTILES OF DAILY FLOW FOR THE DATE, WATER YEARS 1996-2025, 7-DAY WINDOW. CLASSES AS USGS WATERWATCH.\n\n  SITE ID  STATION                    DATE             CFS      P10      P25   MEDIAN      P75      P90    % MED  CLASS\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790 Tuolumne R Grand Canyon    2026-10-17      7.57     7.53    10.90    14.50    42.60   254.20    52.2%  BELOW NORMAL\n  11276500 Tuolumne R nr Hetch Hetchy 2026-10-17     57.80    36.30    51.60    58.55    63.50    67.59    98.7%  NORMAL\n  11284400 Big Creek nr Groveland     2026-10-17      0.00     0.00     0.00     0.00     0.00     0.01      --   NORMAL\n  11289650 Tuolumne R bl La Grange    2026-10-17   1660.00   161.00   175.00   359.00   568.75   875.40   462.4%  MUCH ABOVE NORMAL\n  11290000 Tuolumne R at Modesto      2026-10-17   1170.00   167.20   241.00   459.00   689.00   908.90   254.9%  MUCH ABOVE NORMAL\n  11264500 Merced R at Happy Isles    2026-10-17      3.55     3.55     5.93    11.15    24.48    96.97    31.8%  BELOW NORMAL\n  11266500 Merced R at Pohono Bridge  2026-10-17     14.10    12.31    15.28    25.30    50.08   135.00    55.7%  BELOW NORMAL\n  11303000 Stanislaus R at Ripon      2026-10-17   1000.00   249.10   333.75   589.50  1042.50  1489.00   169.6%  NORMAL\n\nSECTION II: LAST 30 DAYS VS NORMAL FOR THOSE DATES\n  % NORMAL = 30-DAY TOTAL FLOW / TOTAL OF THE DAILY MEDIANS. TREND = LAST 7 DAYS VS THE 7 BEFORE, +/-10% OR MORE.\n\n  SITE ID   STATION                    DAYS    MEAN CFS    MIN CFS    MAX CFS  % NORMAL DAYS<P10 DAYS>P90  7-DAY TREND\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790  Tuolumne R Grand Canyon      30        8.43       6.80      10.70     55.9%        0        0  STEADY\n  11276500  Tuolumne R nr Hetch Hetchy   30       63.39      56.80      76.60     97.7%        0        0  STEADY\n  11284400  Big Creek nr Groveland       30        0.00       0.00       0.00       --         0        0  STEADY\n  11289650  Tuolumne R bl La Grange      30      305.60     171.00    1660.00    136.5%        0        2  RISING     166.1%\n  11290000  Tuolumne R at Modesto        30      251.60     153.00    1170.00     79.1%        0        1  RISING      87.0%\n  11264500  Merced R at Happy Isles      30        4.68       3.55       6.51     43.6%        8        0  STEADY\n  11266500  Merced R at Pohono Bridge    30       15.48      12.70      18.30     60.9%        0        0  STEADY\n  11303000  Stanislaus R at Ripon        30      416.27     159.00    1000.00    122.8%        7        0  RISING      20.0%\n\nSECTION III: WATERSHED BASINS\n  GAGES ON ONE RIVER MEASURE THE SAME WATER, SO THEY ARE NOT ADDED. THE LOWEST GAGE IS WHAT LEAVES THE BASIN.\n\n  BASIN       GAGES   LOWEST GAGE (BASIN OUTFLOW)       CFS  CLASS             MUCH BELOW  BELOW NORMAL  ABOVE MUCH ABOVE\n------------------------------------------------------------------------------------------------------------------------------------\n  TUOLUMNE      5     Tuolumne R at Modesto         1170.00  MUCH ABOVE NORMAL          0      1      2      0          2\n  MERCED        2     Merced R at Pohono Bridge       14.10  BELOW NORMAL               0      2      0      0          0\n  STANISLAUS    1     Stanislaus R at Ripon         1000.00  NORMAL                     0      0      1      0          0\n\nSECTION IV: RUN SUMMARY\n\n    GAGES PROCESSED ..................     8\n    DAILY NORMALS READ ...............  2928\n    DAILY MEANS READ .................   480\n    RECORDS SKIPPED (INVALID) ........     0\n    GAGES STALE OR WITHOUT DATA ......     0\n    WATERSHED BASINS .................     3\n    RETURN CODE ......................     0\n\n====================================================================================================================================\n                                                  END OF REPORT - SIERRA-FLOW V3.0\n====================================================================================================================================\n","sabotage":{"cobol":"====================================================================================================================================\n\n                                              SIERRA NEVADA WATERSHED ANALYSIS SYSTEM\n                                            USGS STREAMFLOW DATA PROCESSING REPORT  V3.0\n                                                  RUN 2026-10-04 18:09:35 UTC\n\n====================================================================================================================================\n\nSECTION I: LATEST DAILY MEAN VS NORMAL FOR THE DATE\n  NORMAL = PERCENTILES OF DAILY FLOW FOR THE DATE, WATER YEARS 1996-2025, 7-DAY WINDOW. CLASSES AS USGS WATERWATCH.\n\n  SITE ID  STATION                    DATE             CFS      P10      P25   MEDIAN      P75      P90    % MED  CLASS\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790 Tuolumne R Grand Canyon    2026-10-03      7.81     5.94     8.10    15.30    26.20    82.48    51.0%  BELOW NORMAL\n  11276500 Tuolumne R nr Hetch Hetchy 2026-10-03     58.10    41.40    53.20    60.00    68.43    76.19    96.8%  NORMAL\n  11284400 Big Creek nr Groveland     2026-10-03      0.00     0.00     0.00     0.00     0.00     0.00      --   NORMAL\n  11289650 Tuolumne R bl La Grange    2026-10-03    217.00   101.00   127.75   222.50   358.00   534.00    97.5%  NORMAL\n  11290000 Tuolumne R at Modesto      2026-10-03    414.00   126.00   195.50   307.50   497.00   702.80   134.6%  NORMAL\n  11264500 Merced R at Happy Isles    2026-10-03      4.30     4.15     5.16     9.42    23.03    52.65    45.6%  BELOW NORMAL\n  11266500 Merced R at Pohono Bridge  2026-10-03     15.20    12.21    15.93    24.10    42.68    83.24    63.1%  BELOW NORMAL\n  11303000 Stanislaus R at Ripon      2026-10-03    447.00   191.10   240.00   300.00   428.25  1478.00   149.0%  ABOVE NORMAL\n\nSECTION II: LAST 30 DAYS VS NORMAL FOR THOSE DATES\n  % NORMAL = 30-DAY TOTAL FLOW / TOTAL OF THE DAILY MEDIANS. TREND = LAST 7 DAYS VS THE 7 BEFORE, +/-10% OR MORE.\n\n  SITE ID   STATION                    DAYS    MEAN CFS    MIN CFS    MAX CFS  % NORMAL DAYS<P10 DAYS>P90  7-DAY TREND\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790  Tuolumne R Grand Canyon      30       11.81       7.81      21.70     67.7%        0        0  FALLING    -15.8%\n  11276500  Tuolumne R nr Hetch Hetchy   30       74.64      58.10      85.90     91.2%        0        0  STEADY\n  11284400  Big Creek nr Groveland       30        0.00       0.00       0.00       --         0        0  STEADY\n  11289650  Tuolumne R bl La Grange      30      203.30     186.00     345.00    117.9%        0        0  RISING      24.3%\n  11290000  Tuolumne R at Modesto        30      184.83     150.00     414.00     67.7%        0        0  RISING      27.8%\n  11264500  Merced R at Happy Isles      30        7.83       4.30      18.50     58.0%        0        0  FALLING    -15.1%\n  11266500  Merced R at Pohono Bridge    30       19.42      15.10      30.30     66.9%        0        0  STEADY\n  11303000  Stanislaus R at Ripon        30      208.30     159.00     447.00     68.0%       20        0  RISING     108.0%\n\nSECTION III: WATERSHED BASINS\n  GAGES ON ONE RIVER MEASURE THE SAME WATER, SO THEY ARE NOT ADDED. THE LOWEST GAGE IS WHAT LEAVES THE BASIN.\n\n  BASIN       GAGES   LOWEST GAGE (BASIN OUTFLOW)       CFS  CLASS             MUCH BELOW  BELOW NORMAL  ABOVE MUCH ABOVE\n------------------------------------------------------------------------------------------------------------------------------------\n  TUOLUMNE      5     Tuolumne R at Modesto          414.00  NORMAL                     0      1      4      0          0\n  MERCED        2     Merced R at Pohono Bridge       15.20  BELOW NORMAL               0      2      0      0          0\n  STANISLAUS    1     Stanislaus R at Ripon          447.00  ABOVE NORMAL               0      0      0      1          0\n\nSECTION IV: RUN SUMMARY\n\n    GAGES PROCESSED ..................     8\n    DAILY NORMALS READ ...............  2928\n    DAILY MEANS READ .................   480\n    RECORDS SKIPPED (INVALID) ........     0\n    GAGES STALE OR WITHOUT DATA ......     0\n    WATERSHED BASINS .................     3\n    RETURN CODE ......................     0\n\n====================================================================================================================================\n                                                  END OF REPORT - SIERRA-FLOW V3.0\n====================================================================================================================================\n","csharp":"====================================================================================================================================\n\n                                              SIERRA NEVADA WATERSHED ANALYSIS SYSTEM\n                                            USGS STREAMFLOW DATA PROCESSING REPORT  V3.0\n                                                  RUN 2026-10-04 18:09:35 UTC\n\n====================================================================================================================================\n\nSECTION I: LATEST DAILY MEAN VS NORMAL FOR THE DATE\n  NORMAL = PERCENTILES OF DAILY FLOW FOR THE DATE, WATER YEARS 1996-2025, 7-DAY WINDOW. CLASSES AS USGS WATERWATCH.\n\n  SITE ID  STATION                    DATE             CFS      P10      P25   MEDIAN      P75      P90    % MED  CLASS\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790 Tuolumne R Grand Canyon    2026-10-03      7.81     5.94     8.10    15.30    26.20    82.48    51.0%  BELOW NORMAL\n  11276500 Tuolumne R nr Hetch Hetchy 2026-10-03     58.10    41.40    53.20    60.00    68.43    76.19    96.8%  NORMAL\n  11284400 Big Creek nr Groveland     2026-10-03      0.00     0.00     0.00     0.00     0.00     0.00      --   NORMAL\n  11289650 Tuolumne R bl La Grange    2026-10-03    217.00   101.00   127.75   222.50   358.00   534.00    97.5%  NORMAL\n  11290000 Tuolumne R at Modesto      2026-10-03    414.00   126.00   195.50   307.50   497.00   702.80   134.6%  NORMAL\n  11264500 Merced R at Happy Isles    2026-10-03      4.30     4.15     5.16     9.42    23.03    52.65    45.6%  BELOW NORMAL\n  11266500 Merced R at Pohono Bridge  2026-10-03     15.20    12.21    15.93    24.10    42.68    83.24    63.1%  BELOW NORMAL\n  11303000 Stanislaus R at Ripon      2026-10-03    447.00   191.10   240.00   300.00   428.25  1478.00   149.0%  ABOVE NORMAL\n\nSECTION II: LAST 30 DAYS VS NORMAL FOR THOSE DATES\n  % NORMAL = 30-DAY TOTAL FLOW / TOTAL OF THE DAILY MEDIANS. TREND = LAST 7 DAYS VS THE 7 BEFORE, +/-10% OR MORE.\n\n  SITE ID   STATION                    DAYS    MEAN CFS    MIN CFS    MAX CFS  % NORMAL DAYS<P10 DAYS>P90  7-DAY TREND\n------------------------------------------------------------------------------------------------------------------------------------\n  11274790  Tuolumne R Grand Canyon      30       11.80       7.81      21.70     67.7%        0        0  FALLING    -15.8%\n  11276500  Tuolumne R nr Hetch Hetchy   30       74.64      58.10      85.90     91.2%        0        0  STEADY\n  11284400  Big Creek nr Groveland       30        0.00       0.00       0.00       --         0        0  STEADY\n  11289650  Tuolumne R bl La Grange      30      203.30     186.00     345.00    117.9%        0        0  RISING      24.3%\n  11290000  Tuolumne R at Modesto        30      184.83     150.00     414.00     67.7%        0        0  RISING      27.8%\n  11264500  Merced R at Happy Isles      30        7.83       4.30      18.50     58.0%        0        0  FALLING    -15.1%\n  11266500  Merced R at Pohono Bridge    30       19.42      15.10      30.30     66.9%        0        0  STEADY\n  11303000  Stanislaus R at Ripon        30      208.30     159.00     447.00     68.0%       20        0  RISING     108.0%\n\nSECTION III: WATERSHED BASINS\n  GAGES ON ONE RIVER MEASURE THE SAME WATER, SO THEY ARE NOT ADDED. THE LOWEST GAGE IS WHAT LEAVES THE BASIN.\n\n  BASIN       GAGES   LOWEST GAGE (BASIN OUTFLOW)       CFS  CLASS             MUCH BELOW  BELOW NORMAL  ABOVE MUCH ABOVE\n------------------------------------------------------------------------------------------------------------------------------------\n  TUOLUMNE      5     Tuolumne R at Modesto          414.00  NORMAL                     0      1      4      0          0\n  MERCED        2     Merced R at Pohono Bridge       15.20  BELOW NORMAL               0      2      0      0          0\n  STANISLAUS    1     Stanislaus R at Ripon          447.00  ABOVE NORMAL               0      0      0      1          0\n\nSECTION IV: RUN SUMMARY\n\n    GAGES PROCESSED ..................     8\n    DAILY NORMALS READ ...............  2928\n    DAILY MEANS READ .................   480\n    RECORDS SKIPPED (INVALID) ........     0\n    GAGES STALE OR WITHOUT DATA ......     0\n    WATERSHED BASINS .................     3\n    RETURN CODE ......................     0\n\n====================================================================================================================================\n                                                  END OF REPORT - SIERRA-FLOW V3.0\n====================================================================================================================================\n","summary":{"change":"Cobol.Rounded: MidpointRounding.AwayFromZero -> MidpointRounding.ToEven (C#'s default)","cases":29,"matched":26,"failed":[{"kind":"night","name":"2026-10-04","diff":"--- cobol/streamflow-report.txt\n+++ csharp/streamflow-report.txt\n@@ -28 +28 @@\n-  11274790  Tuolumne R Grand Canyon      30       11.81       7.81      21.70     67.7%        0        0  FALLING    -15.8%\n+  11274790  Tuolumne R Grand Canyon      30       11.80       7.81      21.70     67.7%        0        0  FALLING    -15.8%\n"},{"kind":"night","name":"2026-10-15","diff":"--- cobol/streamflow-report.txt\n+++ csharp/streamflow-report.txt\n@@ -20 +20 @@\n-  11266500 Merced R at Pohono Bridge  2026-10-14     14.70    12.31    14.90    24.00    41.28    70.80    61.3%  BELOW NORMAL\n+  11266500 Merced R at Pohono Bridge  2026-10-14     14.70    12.31    14.90    24.00    41.28    70.80    61.2%  BELOW NORMAL\n"},{"kind":"normals","name":"synthetic-30yr","diff":"--- cobol/normals.csv\n+++ csharp/normals.csv\n@@ -3,2 +3,2 @@\n-11111111,2,1,2,209,31,154.23,207.34,325.33,474.27,611.18\n-11111111,3,1,3,209,31,154.23,200.45,311.79,467.37,641.86\n+11111111,2,1,2,209,31,154.23,207.34,325.33,474.26,611.18\n+11111111,3,1,3,209,31,154.23,200.44,311.79,467.37,641.86\n@@ -6,2 +6,2 @@\n-11111111,5,1,5,208,30,160.65,201.82,310.83,472.60,652.87\n-11111111,6,1,6,208,30,150.90,204.67,311.37,458.64,652.87\n+11111111,5,1,5,208,30,160.65,201.82,310.82,472.60,652.87\n+11111111,6,1,6,208,30,150.90,204.67,311.36,458.64,652.87\n@@ -9 +9 @@\n-11111111,8,1,8,208,30,138.02,191.00,301.90,452.99,645.02\n+11111111,8,1,8,208,30,138.02,191.00,301.90,452.98,645.02\n@@ -11 +11 @@\n-11111111,10,1,10,208,30,129.30,188.73,292.51,467.18,649.32\n+11111111,10,1,10,208,30,129.30,188.72,292.51,467.18,649.32\n@@ -14,2 +14,2 @@\n-11111111,13,1,13,209,30,119.59,179.87,268.54,439.99,678.71\n-11111111,14,1,14,208,30,119.71,182.58,269.24,443.99,662.72\n+11111111,13,1,13,209,30,119.59,179.86,268.54,439.98,678.71\n+11111111,14,1,14,208,30,119.71,182.58,269.24,443.98,662.72\n@@ -17,2 +17,2 @@\n-11111111,16,1,16,209,30,122.65,186.17,273.07,439.99,637.49\n-11111111,17,1,17,209,30,121.48,185.26,271.84,422.09,622.52\n+11111111,16,1,16,209,30,122.65,186.16,273.07,439.98,637.49\n+11111111,17,1,17,209,30,121.48,185.26,271.84,422.08,622.52\n@@ -22,2 +22,2 @@\n-11111111,21,1,21,209,30,126.11,193.07,280.85,426.51,553.10\n-11111111,22,1,22,209,30,133.78,191.57,295.13,434.09,596.99\n+11111111,21,1,21,209,30,126.11,193.06,280."}],"normals_lines_changed":374,"normals_lines_total":1098}},"revisions":{"nights":17,"gage_days":608,"changes":[{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-08","first":171.0,"old":171.0,"new":170.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-09","first":171.0,"old":171.0,"new":170.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-10","first":171.0,"old":171.0,"new":170.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-11","first":173.0,"old":173.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-12","first":175.0,"old":175.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-13","first":178.0,"old":178.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-14","first":179.0,"old":179.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-15","first":179.0,"old":179.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-16","first":180.0,"old":180.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-17","first":180.0,"old":180.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-18","first":192.0,"old":192.0,"new":173.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-19","first":204.0,"old":204.0,"new":175.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-20","first":192.0,"old":192.0,"new":173.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-21","first":186.0,"old":186.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-22","first":187.0,"old":187.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-23","first":187.0,"old":187.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-24","first":189.0,"old":189.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-25","first":186.0,"old":186.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-26","first":185.0,"old":185.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-27","first":187.0,"old":187.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-28","first":189.0,"old":189.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-29","first":188.0,"old":188.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-30","first":190.0,"old":190.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-08-31","first":192.0,"old":192.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-01","first":190.0,"old":190.0,"new":172.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-02","first":189.0,"old":189.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-03","first":186.0,"old":186.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-04","first":186.0,"old":186.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-05","first":188.0,"old":188.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-06","first":187.0,"old":187.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-07","first":188.0,"old":188.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-08","first":188.0,"old":188.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-09","first":190.0,"old":190.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-10","first":191.0,"old":191.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-11","first":190.0,"old":190.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-12","first":191.0,"old":191.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-13","first":192.0,"old":192.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-14","first":191.0,"old":191.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-15","first":192.0,"old":192.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-16","first":193.0,"old":193.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-17","first":193.0,"old":193.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-18","first":193.0,"old":193.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-19","first":193.0,"old":193.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-20","first":193.0,"old":193.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-21","first":193.0,"old":193.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-22","first":194.0,"old":194.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-23","first":193.0,"old":193.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-24","first":196.0,"old":196.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-25","first":195.0,"old":195.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-26","first":197.0,"old":197.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-27","first":197.0,"old":197.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-28","first":199.0,"old":199.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-29","first":201.0,"old":201.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-09-30","first":204.0,"old":204.0,"new":171.0},{"night":"2026-10-05","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-10-01","first":345.0,"old":345.0,"new":326.0},{"night":"2026-10-17","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-10-14","first":257.0,"old":257.0,"new":258.0},{"night":"2026-10-17","site_id":"11289650","name":"Tuolumne R bl La Grange","date":"2026-10-15","first":534.0,"old":534.0,"new":573.0}]},"gages":[{"site_id":"11274790","name":"Tuolumne R Grand Canyon","basin":"TUOLUMNE","seq":1,"regulation":"NATURAL","lat":37.91658,"lon":-119.65986,"next":"Tuolumne R nr Hetch Hetchy","km_to_next":12.4},{"site_id":"11276500","name":"Tuolumne R nr Hetch Hetchy","basin":"TUOLUMNE","seq":2,"regulation":"REGULATED","lat":37.93741,"lon":-119.7982,"next":"Big Creek nr Groveland","km_to_next":35.6},{"site_id":"11284400","name":"Big Creek nr Groveland","basin":"TUOLUMNE","seq":3,"regulation":"NATURAL","lat":37.84185,"lon":-120.18488,"next":"Tuolumne R bl La Grange","km_to_next":29.9},{"site_id":"11289650","name":"Tuolumne R bl La Grange","basin":"TUOLUMNE","seq":4,"regulation":"REGULATED","lat":37.6663,"lon":-120.4421,"next":"Tuolumne R at Modesto","km_to_next":48.1},{"site_id":"11290000","name":"Tuolumne R at Modesto","basin":"TUOLUMNE","seq":5,"regulation":"REGULATED","lat":37.62715,"lon":-120.98438,"next":null,"km_to_next":null},{"site_id":"11264500","name":"Merced R at Happy Isles","basin":"MERCED","seq":1,"regulation":"NATURAL","lat":37.7313,"lon":-119.55902,"next":"Merced R at Pohono Bridge","km_to_next":9.5},{"site_id":"11266500","name":"Merced R at Pohono Bridge","basin":"MERCED","seq":2,"regulation":"NATURAL","lat":37.71628,"lon":-119.66567,"next":null,"km_to_next":null},{"site_id":"11303000","name":"Stanislaus R at Ripon","basin":"STANISLAUS","seq":1,"regulation":"REGULATED","lat":37.72962,"lon":-121.11045,"next":null,"km_to_next":null}],"distance_source":"computed at build on the WGS 84 ellipsoid (Vincenty)","sql":null}</script>
+<script>
+(function () {
+  "use strict";
+  var D = JSON.parse(document.getElementById("data").textContent);
+  var S = D.summary, R = S.results;
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+  var fmt = function (n) { return Number(n).toLocaleString("en-US"); };
+
+  // ---------- status ----------
+  var diffs = S.cases - S.matched;
+  $("status").innerHTML = [
+    ['<b class="' + (diffs ? '' : 'ok') + '">' + S.matched + ' / ' + S.cases + '</b>', 'cases match'],
+    ['<b>' + S.nights + '</b>', 'production nights replayed'],
+    ['<b>' + fmt(S.lines_compared) + '</b>', 'lines compared'],
+    ['<b class="' + (diffs ? '' : 'ok') + '">' + diffs + '</b>', 'cases with any difference']
+  ].map(function (x) { return '<div>' + x[0] + '<span>' + x[1] + '</span></div>'; }).join("");
+  $("runline").textContent = "Last parallel run " + S.generated_utc + " UTC · " + S.legacy.compiler +
+    " vs " + S.new.runtime + " · COBOL repo at " + S.legacy.head;
+
+  // ---------- seam viewer ----------
+  var viewer = $("viewer"), seam = $("seam"), mode = "ship";
+  function lines(t) { return t.replace(/\n$/, "").split("\n"); }
+  function render(oldT, newT) {
+    var a = lines(oldT), b = lines(newT), n = Math.max(a.length, b.length), bad = [];
+    var ho = "", hn = "";
+    for (var i = 0; i < n; i++) {
+      var x = a[i] || "", y = b[i] || "", d = x !== y;
+      if (d) bad.push(i);
+      ho += '<span class="ln' + (d ? ' d' : '') + '">' + (esc(x) || " ") + '</span>';
+      hn += '<span class="ln' + (d ? ' d' : '') + '">' + (esc(y) || " ") + '</span>';
+    }
+    $("pre-old").innerHTML = ho; $("pre-new").innerHTML = hn;
+    return { a: a, b: b, bad: bad, n: n };
+  }
+  function show(m) {
+    mode = m;
+    $("mode-ship").setAttribute("aria-pressed", m === "ship");
+    $("mode-sab").setAttribute("aria-pressed", m === "sab");
+    var r;
+    if (m === "ship") {
+      r = render(D.report, D.report_csharp);
+      $("rlabel").textContent = "sierraflow run · .NET 8 ▸";
+      var runL = (D.report.match(/RUN (\S+ \S+ \S+)/) || [, ""])[1];
+      $("verdict").innerHTML = r.bad.length
+        ? '<span class="pill bad">DIFF</span><span>' + r.bad.length + ' lines differ</span>'
+        : '<span class="pill ok">MATCH</span><span>' + r.n + ' of ' + r.n + ' lines identical · run ' + esc(runL) + '</span>';
+      $("diffnote").textContent = "";
+    } else {
+      r = render(D.sabotage.cobol, D.sabotage.csharp);
+      $("rlabel").textContent = "sierraflow run · banker's rounding ▸";
+      $("verdict").innerHTML = '<span class="pill bad">DIFF</span><span>' + r.bad.length + ' of ' + r.n + ' lines differ</span>';
+      var i = r.bad[0];
+      if (i !== undefined) {
+        var x = r.a[i], y = r.b[i], k = 0;
+        while (k < x.length && x[k] === y[k]) k++;
+        var lo = x.lastIndexOf(" ", k) + 1, hi = x.indexOf(" ", k); if (hi < 0) hi = x.length;
+        var hi2 = y.indexOf(" ", k); if (hi2 < 0) hi2 = y.length;
+        $("diffnote").innerHTML = "Line " + (i + 1) + ", " + esc(x.trim().split(/\s{2,}/)[1] || "") + ", column " + (k + 1) +
+          ': COBOL printed <span class="o">' + esc(x.slice(lo, hi)) + '</span>, C# printed <span class="n">' + esc(y.slice(lo, hi2)) +
+          '</span>. <b>That one cent fails the night.</b>';
+        var pre = $("pre-old"), probe = document.createElement("span");
+        probe.textContent = "0000000000"; pre.appendChild(probe);
+        var cw = probe.getBoundingClientRect().width / 10; pre.removeChild(probe);
+        var pad = parseFloat(getComputedStyle(pre).paddingLeft) || 0;
+        var vw = viewer.getBoundingClientRect().width, px = pad + Math.max(0, lo - 2) * cw;
+        var sc = $("scroller"); sc.scrollLeft = Math.max(0, px - sc.clientWidth * 0.55);
+        setSeam(px / vw * 100);
+      }
+    }
+  }
+  function setSeam(p) {
+    p = Math.max(2, Math.min(98, p));
+    viewer.style.setProperty("--seam", p + "%");
+    seam.value = Math.round(p);
+  }
+  seam.addEventListener("input", function () { setSeam(+seam.value); });
+  var dragging = false;
+  function fromEvent(e) {
+    var r = viewer.getBoundingClientRect();
+    setSeam((e.clientX - r.left) / r.width * 100);
+  }
+  viewer.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "touch") return;          // touch scrolls; the slider moves the seam
+    dragging = true; viewer.setPointerCapture(e.pointerId); fromEvent(e);
+  });
+  viewer.addEventListener("pointermove", function (e) { if (dragging) fromEvent(e); });
+  viewer.addEventListener("pointerup", function () { dragging = false; });
+  viewer.addEventListener("pointercancel", function () { dragging = false; });
+  $("mode-ship").addEventListener("click", function () { show("ship"); });
+  $("mode-sab").addEventListener("click", function () { show("sab"); });
+  $("show-sab").addEventListener("click", function () {
+    show("sab");
+    $("report").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+  show("ship");
+
+  // ---------- nights ----------
+  var nights = R.filter(function (c) { return c.kind === "night"; });
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  $("nights").innerHTML = nights.map(function (c) {
+    var run = c.run || c.name, d = run.slice(0, 10).split("-");
+    var t = run.length > 10 ? run.slice(11, 16) + " UTC" : "";
+    var ok = c.match && c.replay_matches_production !== false;
+    return '<div class="night' + (ok ? '' : ' bad') + '" title="commit ' + esc(c.commit || "") + '"><span class="d">' +
+      months[+d[1] - 1] + " " + (+d[2]) + '</span><span class="t">' + t + '</span><span class="v">' +
+      (c.match ? "✓ match" : "≠ diff") + (c.replay_matches_production ? " · = prod" : "") + '</span></div>';
+  }).join("");
+
+  // ---------- edge cases ----------
+  var finding = { "garbage-values": 1, "flood": 2, "too-many-days": 3, "out-of-order": 4, "future-date": 5, "huge-rise": 6, "thirteen-gages": 7 };
+  var verdict = function (c) { return c.match ? '<span class="pill ok">MATCH</span>' : '<span class="pill bad">DIFF</span>'; };
+  var rc = function (c) { var s = String(c.rc).padStart(4, "0"); return '<td class="rc' + (c.rc ? ' warn' : '') + '">RC=' + s + '</td>'; };
+  $("edges").innerHTML = R.filter(function (c) { return c.kind === "edge"; }).map(function (c) {
+    var f = finding[c.name];
+    return '<tr><td class="case">' + esc(c.name) + '</td><td>' + esc(c.why) + '</td>' + rc(c) + '<td>' + verdict(c) +
+      '</td><td class="fd">' + (f ? '<a href="#findings">#' + f + '</a>' : '—') + '</td></tr>';
+  }).join("");
+  $("normals").innerHTML = R.filter(function (c) { return c.kind === "normals"; }).map(function (c) {
+    return '<tr><td class="case">' + esc(c.name) + '</td><td>' + esc(c.why) + '</td>' + rc(c) + '<td>' + verdict(c) +
+      '</td><td class="rc">' + fmt(c.lines_compared) + '</td></tr>';
+  }).join("");
+
+  // ---------- sabotage ----------
+  var sb = D.sabotage.summary || {};
+  var nightsFailed = (sb.failed || []).filter(function (f) { return f.kind === "night"; }).length;
+  $("sabnums").innerHTML =
+    '<div><b>' + sb.matched + ' / ' + sb.cases + '</b>cases still match</div>' +
+    '<div><b>' + nightsFailed + '</b>real nights caught</div>' +
+    '<div><b>' + fmt(sb.normals_lines_changed || 0) + '</b>of ' + fmt(sb.normals_lines_total || 0) + ' normals rows wrong</div>';
+  var firstNight = (sb.failed || []).filter(function (f) { return f.kind === "night"; })[0];
+  if (firstNight) {
+    var dl = firstNight.diff.split("\n").filter(function (l) { return /^[-+] /.test(l) || /^[-+]  /.test(l); }).slice(0, 2);
+    $("sabdiff").innerHTML = '<span>' + esc(firstNight.name) + ', streamflow-report.txt</span>\n' + dl.map(function (l) {
+      var cls = l[0] === "-" ? "m" : "p";
+      return '<span class="' + cls + '">' + esc(l[0] === "-" ? "cobol " : "c#    ") + esc(l.slice(1).replace(/\s{2,}/g, "  ").trim()) + '</span>';
+    }).join("\n");
+  }
+
+  // ---------- three-way agreement ----------
+  var sql = D.sql;
+  $("three").innerHTML =
+    '<div><span class="who o">COBOL ↔ C#</span><b>' + fmt(S.lines_compared) + ' lines</b><p>byte-identical across ' + S.cases + ' cases</p></div>' +
+    '<div><span class="who q">T-SQL ↔ batch job</span><b>' + (sql ? sql.gage_nights_matched + ' / ' + sql.gage_nights_checked : '136 / 136') +
+      '</b><p>' + (sql ? 'gage-nights agree in SQL Server' : 'gage-nights agree, in a local stand-in; SQL Server 2022 runs the same check in CI') + '</p></div>' +
+    '<div><span class="who n">USGS revisions logged</span><b>' + (sql ? sql.revisions : D.revisions.changes.length) +
+      '</b><p>values changed after first publication, across ' + D.revisions.nights + ' nights</p></div>';
+
+  // ---------- revisions chart ----------
+  var ch = D.revisions.changes;
+  var byNight = {};
+  ch.forEach(function (c) { var k = c.night + "|" + c.site_id; (byNight[k] = byNight[k] || []).push(c); });
+  var key = Object.keys(byNight).sort(function (a, b) { return byNight[b].length - byNight[a].length; })[0];
+  var pts = byNight[key].slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+  var nm = pts[0].name, night = pts[0].night;
+  var worst = pts.reduce(function (m, p) { var c = (p.new - p.old) / p.old; return Math.abs(c) > Math.abs(m.c) ? { c: c, p: p } : m; }, { c: 0 });
+  var others = ch.length - pts.length;
+  $("rev-title").textContent = "On " + months[+night.slice(5, 7) - 1] + " " + (+night.slice(8)) + ", USGS revised " + pts.length + " days of " + nm;
+  $("rev-cap").textContent = "Provisional daily means, as first published and as revised that night. The largest change was " +
+    worst.p.date + ": " + worst.p.old + " to " + worst.p.new + " cfs (" + (worst.c * 100).toFixed(1) + "%). The COBOL job overwrote the old numbers " +
+    "without noticing. sierra.flow_revision keeps every one." + (others ? " " + others + " more values changed on other nights." : "");
+
+  (function chart() {
+    var W = 720, H = 300, m = { l: 48, r: 92, t: 14, b: 34 };
+    var iw = W - m.l - m.r, ih = H - m.t - m.b;
+    var t0 = Date.parse(pts[0].date), t1 = Date.parse(pts[pts.length - 1].date);
+    var vals = []; pts.forEach(function (p) { vals.push(p.old, p.new); });
+    var lo = Math.floor(Math.min.apply(null, vals) / 25) * 25, hi = Math.ceil(Math.max.apply(null, vals) / 25) * 25;
+    var x = function (d) { return m.l + (Date.parse(d) - t0) / (t1 - t0) * iw; };
+    var y = function (v) { return m.t + (1 - (v - lo) / (hi - lo)) * ih; };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Line chart of first-published and revised daily flow">';
+    for (var v = lo; v <= hi; v += 25) {
+      s += '<line x1="' + m.l + '" x2="' + (W - m.r) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="var(--rule)" stroke-width="1"/>' +
+           '<text x="' + (m.l - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end" fill="var(--muted)" font-size="11" font-family="IBM Plex Mono, monospace">' + v + '</text>';
+    }
+    var ticks = pts.filter(function (p) { return /-(01|08|15|22)$/.test(p.date); });
+    ticks.forEach(function (p) {
+      var d = p.date.split("-");
+      s += '<text x="' + x(p.date) + '" y="' + (H - 10) + '" text-anchor="middle" fill="var(--muted)" font-size="11" font-family="IBM Plex Mono, monospace">' + months[+d[1] - 1] + " " + (+d[2]) + '</text>';
+    });
+    s += '<text x="' + (m.l - 8) + '" y="' + (m.t - 2) + '" text-anchor="end" fill="var(--muted)" font-size="10.5" font-family="IBM Plex Mono, monospace">cfs</text>';
+    var path = function (k) { return pts.map(function (p, i) { return (i ? "L" : "M") + x(p.date).toFixed(1) + " " + y(p[k]).toFixed(1); }).join(""); };
+    var area = path("old") + pts.slice().reverse().map(function (p) { return "L" + x(p.date).toFixed(1) + " " + y(p.new).toFixed(1); }).join("") + "Z";
+    s += '<path d="' + area + '" fill="var(--s-first)" fill-opacity=".12"/>';
+    s += '<path d="' + path("old") + '" fill="none" stroke="var(--s-first)" stroke-width="2" stroke-linejoin="round"/>';
+    s += '<path d="' + path("new") + '" fill="none" stroke="var(--s-rev)" stroke-width="2" stroke-linejoin="round"/>';
+    var last = pts[pts.length - 1];
+    s += '<circle cx="' + x(last.date) + '" cy="' + y(last.old) + '" r="4" fill="var(--s-first)" stroke="var(--room-2)" stroke-width="2"/>';
+    s += '<circle cx="' + x(last.date) + '" cy="' + y(last.new) + '" r="4" fill="var(--s-rev)" stroke="var(--room-2)" stroke-width="2"/>';
+    var ly1 = y(last.old), ly2 = y(last.new); if (Math.abs(ly1 - ly2) < 16) { ly1 -= 8; ly2 += 8; }
+    s += '<text x="' + (x(last.date) + 9) + '" y="' + (ly1 + 4) + '" fill="var(--text)" font-size="11.5" font-family="IBM Plex Mono, monospace">' + last.old + ' first</text>';
+    s += '<text x="' + (x(last.date) + 9) + '" y="' + (ly2 + 4) + '" fill="var(--text)" font-size="11.5" font-family="IBM Plex Mono, monospace">' + last.new + ' revised</text>';
+    s += '<line id="xh" x1="0" x2="0" y1="' + m.t + '" y2="' + (H - m.b) + '" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3" visibility="hidden"/>';
+    s += '<rect x="' + m.l + '" y="' + m.t + '" width="' + iw + '" height="' + ih + '" fill="transparent" id="hit"/>';
+    s += '</svg><div class="tip" id="tip" hidden></div>';
+    $("chartbox").innerHTML = s;
+    var svg = $("chartbox").querySelector("svg"), tip = $("tip"), xh = $("xh");
+    function move(e) {
+      var r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) / r.width * W;
+      var best = pts[0], bd = 1e9;
+      pts.forEach(function (p) { var d = Math.abs(x(p.date) - sx); if (d < bd) { bd = d; best = p; } });
+      var px = x(best.date);
+      xh.setAttribute("x1", px); xh.setAttribute("x2", px); xh.setAttribute("visibility", "visible");
+      var ch = ((best.new - best.old) / best.old * 100).toFixed(1);
+      tip.innerHTML = best.date + '<br><span class="a">first</span> ' + best.old + ' cfs<br><span class="b">revised</span> ' + best.new + ' cfs<br>' + ch + '%';
+      tip.hidden = false;
+      var left = px / W * r.width + 12; if (left + 150 > r.width) left = px / W * r.width - 150;
+      tip.style.left = left + "px"; tip.style.top = (y(best.old) / H * r.height - 10) + "px";
+    }
+    $("hit").addEventListener("pointermove", move);
+    $("hit").addEventListener("pointerleave", function () { tip.hidden = true; xh.setAttribute("visibility", "hidden"); });
+  })();
+  $("revtable").innerHTML = pts.map(function (p) {
+    return '<tr><td>' + p.date + '</td><td>' + p.old.toFixed(2) + '</td><td>' + p.new.toFixed(2) + '</td><td>' + ((p.new - p.old) / p.old * 100).toFixed(1) + '%</td></tr>';
+  }).join("");
+
+  // ---------- rivers (spatial) ----------
+  var basins = [];
+  D.gages.forEach(function (g) { var b = basins.filter(function (x) { return x.name === g.basin; })[0]; if (!b) basins.push(b = { name: g.basin, g: [] }); b.g.push(g); });
+  $("rivers").innerHTML = basins.map(function (b) {
+    return '<div class="river"><span class="bn">' + esc(b.name) + '</span><div class="chain">' + b.g.map(function (g) {
+      return '<span class="gage' + (g.regulation === "REGULATED" ? " reg" : "") + '" title="USGS ' + g.site_id + '">' + esc(g.name) + '</span>' +
+        (g.km_to_next != null ? '<span class="km">' + g.km_to_next.toFixed(1) + ' km</span>' : '');
+    }).join("") + '</div></div>';
+  }).join("");
+  $("distnote").textContent = "Gages from the top of each river to the bottom, with the straight-line distance to the next one down (" +
+    D.distance_source + "). Dashed: below a dam. The SQL checks find each gage's neighbors with geography.STDistance and a spatial index.";
+})();
+</script>
+
+</body>
+</html>

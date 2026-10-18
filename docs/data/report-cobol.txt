@@ -1,0 +1,58 @@
+====================================================================================================================================
+
+                                              SIERRA NEVADA WATERSHED ANALYSIS SYSTEM
+                                            USGS STREAMFLOW DATA PROCESSING REPORT  V3.0
+                                                  RUN 2026-10-18 17:23:31 UTC
+
+====================================================================================================================================
+
+SECTION I: LATEST DAILY MEAN VS NORMAL FOR THE DATE
+  NORMAL = PERCENTILES OF DAILY FLOW FOR THE DATE, WATER YEARS 1996-2025, 7-DAY WINDOW. CLASSES AS USGS WATERWATCH.
+
+  SITE ID  STATION                    DATE             CFS      P10      P25   MEDIAN      P75      P90    % MED  CLASS
+------------------------------------------------------------------------------------------------------------------------------------
+  11274790 Tuolumne R Grand Canyon    2026-10-17      7.57     7.53    10.90    14.50    42.60   254.20    52.2%  BELOW NORMAL
+  11276500 Tuolumne R nr Hetch Hetchy 2026-10-17     57.80    36.30    51.60    58.55    63.50    67.59    98.7%  NORMAL
+  11284400 Big Creek nr Groveland     2026-10-17      0.00     0.00     0.00     0.00     0.00     0.01      --   NORMAL
+  11289650 Tuolumne R bl La Grange    2026-10-17   1660.00   161.00   175.00   359.00   568.75   875.40   462.4%  MUCH ABOVE NORMAL
+  11290000 Tuolumne R at Modesto      2026-10-17   1170.00   167.20   241.00   459.00   689.00   908.90   254.9%  MUCH ABOVE NORMAL
+  11264500 Merced R at Happy Isles    2026-10-17      3.55     3.55     5.93    11.15    24.48    96.97    31.8%  BELOW NORMAL
+  11266500 Merced R at Pohono Bridge  2026-10-17     14.10    12.31    15.28    25.30    50.08   135.00    55.7%  BELOW NORMAL
+  11303000 Stanislaus R at Ripon      2026-10-17   1000.00   249.10   333.75   589.50  1042.50  1489.00   169.6%  NORMAL
+
+SECTION II: LAST 30 DAYS VS NORMAL FOR THOSE DATES
+  % NORMAL = 30-DAY TOTAL FLOW / TOTAL OF THE DAILY MEDIANS. TREND = LAST 7 DAYS VS THE 7 BEFORE, +/-10% OR MORE.
+
+  SITE ID   STATION                    DAYS    MEAN CFS    MIN CFS    MAX CFS  % NORMAL DAYS<P10 DAYS>P90  7-DAY TREND
+------------------------------------------------------------------------------------------------------------------------------------
+  11274790  Tuolumne R Grand Canyon      30        8.43       6.80      10.70     55.9%        0        0  STEADY
+  11276500  Tuolumne R nr Hetch Hetchy   30       63.39      56.80      76.60     97.7%        0        0  STEADY
+  11284400  Big Creek nr Groveland       30        0.00       0.00       0.00       --         0        0  STEADY
+  11289650  Tuolumne R bl La Grange      30      305.60     171.00    1660.00    136.5%        0        2  RISING     166.1%
+  11290000  Tuolumne R at Modesto        30      251.60     153.00    1170.00     79.1%        0        1  RISING      87.0%
+  11264500  Merced R at Happy Isles      30        4.68       3.55       6.51     43.6%        8        0  STEADY
+  11266500  Merced R at Pohono Bridge    30       15.48      12.70      18.30     60.9%        0        0  STEADY
+  11303000  Stanislaus R at Ripon        30      416.27     159.00    1000.00    122.8%        7        0  RISING      20.0%
+
+SECTION III: WATERSHED BASINS
+  GAGES ON ONE RIVER MEASURE THE SAME WATER, SO THEY ARE NOT ADDED. THE LOWEST GAGE IS WHAT LEAVES THE BASIN.
+
+  BASIN       GAGES   LOWEST GAGE (BASIN OUTFLOW)       CFS  CLASS             MUCH BELOW  BELOW NORMAL  ABOVE MUCH ABOVE
+------------------------------------------------------------------------------------------------------------------------------------
+  TUOLUMNE      5     Tuolumne R at Modesto         1170.00  MUCH ABOVE NORMAL          0      1      2      0          2
+  MERCED        2     Merced R at Pohono Bridge       14.10  BELOW NORMAL               0      2      0      0          0
+  STANISLAUS    1     Stanislaus R at Ripon         1000.00  NORMAL                     0      0      1      0          0
+
+SECTION IV: RUN SUMMARY
+
+    GAGES PROCESSED ..................     8
+    DAILY NORMALS READ ...............  2928
+    DAILY MEANS READ .................   480
+    RECORDS SKIPPED (INVALID) ........     0
+    GAGES STALE OR WITHOUT DATA ......     0
+    WATERSHED BASINS .................     3
+    RETURN CODE ......................     0
+
+====================================================================================================================================
+                                                  END OF REPORT - SIERRA-FLOW V3.0
+====================================================================================================================================

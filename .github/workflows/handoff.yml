@@ -1,0 +1,112 @@
+name: Handoff - nightly parallel run
+
+# Runs after the COBOL job (bdgroves/sierra-flow-cobol, 14:17 UTC) has committed
+# its night. Rebuilds docs/index.html from the evidence and commits it. Replays every night since V3 through the COBOL and the C# side by
+# side, then loads them in order into SQL Server and checks the database agrees.
+# Any difference fails the run.
+
+on:
+  schedule:
+    - cron: '43 15 * * *'      # every night, about an hour and a half after the COBOL job
+    - cron: '13 17 * * 0'      # Sundays: also rebuild normals from 30 years of USGS history
+  workflow_dispatch:
+    inputs:
+      real_normals:
+        description: Also fetch 30 years of USGS history and compare NORMALS
+        type: boolean
+        default: false
+  push:
+    branches: [ main ]
+    paths: [ 'src/**', 'parallel/**', 'sql/**', '.github/workflows/handoff.yml' ]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: handoff
+  cancel-in-progress: false
+
+jobs:
+  parallel:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out the system of record (the COBOL), with its history
+        uses: actions/checkout@v4
+        with:
+          repository: bdgroves/sierra-flow-cobol
+          path: legacy
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install GnuCOBOL
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gnucobol3 > /dev/null && cobc --version | head -1
+
+      - name: Build the C# job
+        run: dotnet build src/SierraFlow -c Release -o bin --nologo -v q
+
+      - name: Fetch 30 years of USGS history (Sundays, or when asked)
+        if: github.event.schedule == '13 17 * * 0' || inputs.real_normals
+        working-directory: legacy
+        run: |
+          python3 fetch_usgs.py --history
+          echo "HISTORY_CSV=$PWD/history.csv" >> "$GITHUB_ENV"
+
+      - name: Parallel run, COBOL vs C#
+        run: python3 parallel/parallel_run.py legacy bin/sierraflow parallel/out
+
+      - name: Start SQL Server 2022
+        run: |
+          PW="Sf-$(openssl rand -hex 12)-9a"
+          echo "::add-mask::$PW"
+          echo "SA_PASSWORD=$PW" >> "$GITHUB_ENV"
+          docker run -d --name mssql -e ACCEPT_EULA=Y -e "MSSQL_SA_PASSWORD=$PW" \
+            -v "$PWD:/work:ro" mcr.microsoft.com/mssql/server:2022-latest > /dev/null
+          for i in $(seq 1 90); do
+            docker exec mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$PW" -Q "SELECT 1" > /dev/null 2>&1 && break
+            sleep 2
+          done
+          docker exec mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$PW" -b -Q "CREATE DATABASE sierraflow"
+
+      - name: Load every night in order, then check the database
+        run: |
+          set -o pipefail
+          q() { docker exec mssql /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$SA_PASSWORD" -d sierraflow -b -I "$@"; }
+          q -i /work/sql/01_schema.sql
+          for night in $(ls -d parallel/out/nights/*/ | sort); do
+            bin/sierraflow sql "${night}csharp" > /dev/null
+            # the container sees the workspace at /work
+            q -i "/work/${night}csharp/load.sql"
+            q -i /work/sql/02_agreement.sql
+          done
+          q -W -s ' | ' -i /work/sql/03_checks.sql | tee parallel/out/sql-checks.txt
+          q -h -1 -y 0 -i /work/sql/04_export.sql > parallel/out/sql.json
+          python3 -c "import json; d=json.load(open('parallel/out/sql.json')); print(d['nights_loaded'], 'nights,', d['revisions'], 'revisions')"
+
+      - name: Publish the evidence for the page
+        if: always()
+        run: |
+          mkdir -p docs/data
+          cp parallel/out/summary.json parallel/out/parallel-log.txt docs/data/ 2>/dev/null || true
+          cp parallel/out/sql.json parallel/out/sql-checks.txt docs/data/ 2>/dev/null || true
+          latest=$(ls -d parallel/out/nights/*/ | sort | tail -1)
+          cp "${latest}cobol/streamflow-report.txt" docs/data/report-cobol.txt
+          cp "${latest}csharp/streamflow-report.txt" docs/data/report-csharp.txt
+          cp "${latest}csharp/results.csv" docs/data/results.csv
+          cp legacy/sites.csv docs/data/sites.csv
+          python3 parallel/revisions.py legacy > docs/data/revisions.json
+          python3 docs/build_page.py
+
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --staged --quiet; then echo "Nothing changed."; exit 0; fi
+          git commit -q -m "data: parallel run $(date -u '+%Y-%m-%d') [skip ci]"
+          git pull -q --rebase && git push -q
