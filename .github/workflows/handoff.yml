@@ -84,15 +84,20 @@ jobs:
             q -i /work/sql/02_agreement.sql
           done
           q -W -s ' | ' -i /work/sql/03_checks.sql | tee parallel/out/sql-checks.txt
-          q -h -1 -y 0 -i /work/sql/04_export.sql > parallel/out/sql.json
-          python3 -c "import json; d=json.load(open('parallel/out/sql.json')); print(d['nights_loaded'], 'nights,', d['revisions'], 'revisions')"
+          # the page's JSON; any trouble here is logged and committed, but doesn't fail the night
+          if q -h -1 -y 0 -i /work/sql/04_export.sql > parallel/out/sql.raw 2> parallel/out/sql-export.log; then
+            python3 -c "import json,sys; d=json.load(open('parallel/out/sql.raw')); json.dump(d, open('parallel/out/sql.json','w'), indent=1); print(d['nights_loaded'], 'nights,', d['revisions'], 'revisions')" >> parallel/out/sql-export.log 2>&1 || true
+          fi
+          { echo '--- stdout (first 2000 chars)'; head -c 2000 parallel/out/sql.raw; } >> parallel/out/sql-export.log
+          cat parallel/out/sql-export.log
 
       - name: Publish the evidence for the page
         if: always()
         run: |
           mkdir -p docs/data
           cp parallel/out/summary.json parallel/out/parallel-log.txt docs/data/ 2>/dev/null || true
-          cp parallel/out/sql.json parallel/out/sql-checks.txt docs/data/ 2>/dev/null || true
+          rm -f docs/data/sql.json
+          cp parallel/out/sql.json parallel/out/sql-checks.txt parallel/out/sql-export.log docs/data/ 2>/dev/null || true
           latest=$(ls -d parallel/out/nights/*/ | sort | tail -1)
           cp "${latest}cobol/streamflow-report.txt" docs/data/report-cobol.txt
           cp "${latest}csharp/streamflow-report.txt" docs/data/report-csharp.txt

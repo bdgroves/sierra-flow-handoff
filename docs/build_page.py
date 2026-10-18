@@ -51,7 +51,12 @@ def read(name, default=None):
     p = DATA / name
     if not p.exists():
         return default
-    return json.loads(p.read_text()) if name.endswith(".json") else p.read_text()
+    if not name.endswith(".json"):
+        return p.read_text()
+    try:
+        return json.loads(p.read_text())
+    except ValueError:            # an empty or partial export: show the page without it
+        return default
 
 
 def main():
