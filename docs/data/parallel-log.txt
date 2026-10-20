@@ -1,4 +1,4 @@
-JOB PARALLEL   2026-10-19 20:42:49 UTC
+JOB PARALLEL   2026-10-20 14:29:26 UTC
 OLD            cobc (GnuCOBOL) 3.1.2.0 · bdgroves/sierra-flow-cobol @ f6489f3
 NEW            sierraflow (C#) · .NET 8.0.426
 
