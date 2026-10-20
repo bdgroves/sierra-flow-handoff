@@ -1,5 +1,5 @@
-JOB PARALLEL   2026-10-20 14:29:26 UTC
-OLD            cobc (GnuCOBOL) 3.1.2.0 · bdgroves/sierra-flow-cobol @ f6489f3
+JOB PARALLEL   2026-10-20 19:34:10 UTC
+OLD            cobc (GnuCOBOL) 3.1.2.0 · bdgroves/sierra-flow-cobol @ 585acee
 NEW            sierraflow (C#) · .NET 8.0.426
 
 CASE night    2026-10-03       RC=0000  MATCH     76 lines  replay=prod
@@ -20,6 +20,7 @@ CASE night    2026-10-16       RC=0000  MATCH     76 lines  replay=prod
 CASE night    2026-10-17       RC=0000  MATCH     76 lines  replay=prod
 CASE night    2026-10-18       RC=0000  MATCH     76 lines  replay=prod
 CASE night    2026-10-19       RC=0000  MATCH     76 lines  replay=prod
+CASE night    2026-10-20       RC=0000  MATCH     76 lines  replay=prod
 CASE edge     stale-gage       RC=0004  MATCH     77 lines
 CASE edge     dead-gage        RC=0004  MATCH     76 lines
 CASE edge     flood            RC=0000  MATCH     76 lines
@@ -33,4 +34,4 @@ CASE edge     thirteen-gages   RC=0004  MATCH     89 lines
 CASE normals  synthetic-30yr   RC=0000  MATCH   1105 lines
 CASE normals  no-history       RC=0012  MATCH      3 lines
 
-JOB PARALLEL   ENDED  30 OF 30 CASES MATCH  3,252 LINES COMPARED
+JOB PARALLEL   ENDED  31 OF 31 CASES MATCH  3,328 LINES COMPARED
