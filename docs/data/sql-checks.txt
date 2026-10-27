@@ -1,4 +1,4 @@
-CHECKS FOR RUN 2026-10-26
+CHECKS FOR RUN 2026-10-27
 run_date gages matched
 -------- ----- -------
 2026-10-03 8 8
@@ -25,6 +25,7 @@ run_date gages matched
 2026-10-24 8 8
 2026-10-25 8 8
 2026-10-26 8 8
+2026-10-27 8 8
 SPATIAL    GAGE TO THE NEXT GAGE DOWNSTREAM (STRAIGHT LINE, KM)
 basin seq short_name next_downstream km
 ----- --- ---------- --------------- --
@@ -53,12 +54,12 @@ site_id gap_after gap_before missing_days
 DATA QA    PROVISIONAL AND APPROVED DAYS, AND VALUES USGS HAS REVISED
 short_name provisional_days approved_days revisions
 ---------- ---------------- ------------- ---------
-Tuolumne R Grand Canyon 84 0 0
-Tuolumne R nr Hetch Hetchy 84 0 0
-Big Creek nr Groveland 84 0 0
-Tuolumne R bl La Grange 84 0 57
-Tuolumne R at Modesto 84 0 0
-Merced R at Happy Isles 84 0 0
-Merced R at Pohono Bridge 84 0 0
-Stanislaus R at Ripon 84 0 0
+Tuolumne R Grand Canyon 85 0 0
+Tuolumne R nr Hetch Hetchy 85 0 0
+Big Creek nr Groveland 85 0 0
+Tuolumne R bl La Grange 85 0 57
+Tuolumne R at Modesto 85 0 0
+Merced R at Happy Isles 85 0 0
+Merced R at Pohono Bridge 85 0 0
+Stanislaus R at Ripon 85 0 0
 CHECKS COMPLETE
