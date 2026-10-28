@@ -1,6 +1,6 @@
 {
- "nights": 26,
- "gage_days": 680,
+ "nights": 27,
+ "gage_days": 687,
  "changes": [
   {
    "night": "2026-10-05",
@@ -514,6 +514,285 @@
    "first": 534.0,
    "old": 534.0,
    "new": 573.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-08-29",
+   "first": 188.0,
+   "old": 172.0,
+   "new": 171.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-08-30",
+   "first": 190.0,
+   "old": 172.0,
+   "new": 171.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-08-31",
+   "first": 192.0,
+   "old": 172.0,
+   "new": 171.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-09-01",
+   "first": 190.0,
+   "old": 172.0,
+   "new": 171.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-09-30",
+   "first": 204.0,
+   "old": 171.0,
+   "new": 175.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-01",
+   "first": 345.0,
+   "old": 326.0,
+   "new": 362.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-02",
+   "first": 329.0,
+   "old": 329.0,
+   "new": 342.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-03",
+   "first": 217.0,
+   "old": 217.0,
+   "new": 194.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-04",
+   "first": 238.0,
+   "old": 238.0,
+   "new": 222.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-05",
+   "first": 238.0,
+   "old": 238.0,
+   "new": 221.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-06",
+   "first": 238.0,
+   "old": 238.0,
+   "new": 221.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-07",
+   "first": 237.0,
+   "old": 237.0,
+   "new": 220.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-08",
+   "first": 237.0,
+   "old": 237.0,
+   "new": 220.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-09",
+   "first": 235.0,
+   "old": 235.0,
+   "new": 217.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-10",
+   "first": 236.0,
+   "old": 236.0,
+   "new": 219.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-11",
+   "first": 237.0,
+   "old": 237.0,
+   "new": 220.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-12",
+   "first": 239.0,
+   "old": 239.0,
+   "new": 222.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-13",
+   "first": 237.0,
+   "old": 237.0,
+   "new": 220.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-14",
+   "first": 257.0,
+   "old": 258.0,
+   "new": 247.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-15",
+   "first": 534.0,
+   "old": 573.0,
+   "new": 622.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-16",
+   "first": 1210.0,
+   "old": 1210.0,
+   "new": 1220.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-17",
+   "first": 1660.0,
+   "old": 1660.0,
+   "new": 1800.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-18",
+   "first": 1110.0,
+   "old": 1110.0,
+   "new": 1090.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-19",
+   "first": 490.0,
+   "old": 490.0,
+   "new": 502.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-20",
+   "first": 222.0,
+   "old": 222.0,
+   "new": 200.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-21",
+   "first": 513.0,
+   "old": 513.0,
+   "new": 527.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-22",
+   "first": 919.0,
+   "old": 919.0,
+   "new": 913.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-23",
+   "first": 1080.0,
+   "old": 1080.0,
+   "new": 1070.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-24",
+   "first": 716.0,
+   "old": 716.0,
+   "new": 721.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-25",
+   "first": 415.0,
+   "old": 415.0,
+   "new": 431.0
+  },
+  {
+   "night": "2026-10-28",
+   "site_id": "11289650",
+   "name": "Tuolumne R bl La Grange",
+   "date": "2026-10-26",
+   "first": 236.0,
+   "old": 236.0,
+   "new": 218.0
   }
  ]
 }

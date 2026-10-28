@@ -1,58 +1,58 @@
 {
- "run_date": "2026-10-27",
- "nights_loaded": 25,
- "daily_rows": 680,
- "revisions": 57,
+ "run_date": "2026-10-28",
+ "nights_loaded": 26,
+ "daily_rows": 687,
+ "revisions": 88,
  "server": "Microsoft SQL Server 2022 (RTM-CU27-GDR) (KB5126934) - 16.0.4305.5 (X64) \n\tOct  2 2026 17:28:11 \n\tCopyright (C) 2022 Microsoft Corporation\n\tDeveloper Edition (64-bit) on Linux (Ubuntu 22.04.5 LTS) <X64>",
- "gage_nights_checked": 200,
- "gage_nights_matched": 200,
+ "gage_nights_checked": 208,
+ "gage_nights_matched": 208,
  "agreement": [
   {
    "site_id": "11264500",
-   "job_mean_30": 4.62,
-   "sql_mean_30": 4.62,
+   "job_mean_30": 4.66,
+   "sql_mean_30": 4.66,
    "job_min_30": 3.41,
    "sql_min_30": 3.41,
    "job_max_30": 9.23,
    "sql_max_30": 9.23,
-   "job_trend_pct": 68.5,
-   "sql_trend_pct": 68.5,
+   "job_trend_pct": 84.9,
+   "sql_trend_pct": 84.9,
    "verdict": "MATCH"
   },
   {
    "site_id": "11266500",
-   "job_mean_30": 15.14,
-   "sql_mean_30": 15.14,
+   "job_mean_30": 15.18,
+   "sql_mean_30": 15.18,
    "job_min_30": 12.7,
    "sql_min_30": 12.7,
    "job_max_30": 19.2,
    "sql_max_30": 19.2,
-   "job_trend_pct": 17.8,
-   "sql_trend_pct": 17.8,
+   "job_trend_pct": 22.5,
+   "sql_trend_pct": 22.5,
    "verdict": "MATCH"
   },
   {
    "site_id": "11274790",
-   "job_mean_30": 8.66,
-   "sql_mean_30": 8.66,
+   "job_mean_30": 8.77,
+   "sql_mean_30": 8.77,
    "job_min_30": 6.8,
    "sql_min_30": 6.8,
    "job_max_30": 16.0,
    "sql_max_30": 16.0,
-   "job_trend_pct": 55.2,
-   "sql_trend_pct": 55.2,
+   "job_trend_pct": 67.2,
+   "sql_trend_pct": 67.2,
    "verdict": "MATCH"
   },
   {
    "site_id": "11276500",
-   "job_mean_30": 59.41,
-   "sql_mean_30": 59.41,
+   "job_mean_30": 58.88,
+   "sql_mean_30": 58.88,
    "job_min_30": 53.9,
    "sql_min_30": 53.9,
    "job_max_30": 76.6,
    "sql_max_30": 76.6,
-   "job_trend_pct": -3.6,
-   "sql_trend_pct": -3.6,
+   "job_trend_pct": -3.7,
+   "sql_trend_pct": -3.7,
    "verdict": "MATCH"
   },
   {
@@ -69,38 +69,38 @@
   },
   {
    "site_id": "11289650",
-   "job_mean_30": 444.33,
-   "sql_mean_30": 444.33,
+   "job_mean_30": 444.97,
+   "sql_mean_30": 444.97,
    "job_min_30": 171.0,
    "sql_min_30": 171.0,
-   "job_max_30": 1660.0,
-   "sql_max_30": 1660.0,
-   "job_trend_pct": -25.9,
-   "sql_trend_pct": -25.9,
+   "job_max_30": 1800.0,
+   "sql_max_30": 1800.0,
+   "job_trend_pct": -28.4,
+   "sql_trend_pct": -28.4,
    "verdict": "MATCH"
   },
   {
    "site_id": "11290000",
-   "job_mean_30": 474.87,
-   "sql_mean_30": 474.87,
-   "job_min_30": 153.0,
-   "sql_min_30": 153.0,
+   "job_mean_30": 481.3,
+   "sql_mean_30": 481.3,
+   "job_min_30": 167.0,
+   "sql_min_30": 167.0,
    "job_max_30": 1720.0,
    "sql_max_30": 1720.0,
-   "job_trend_pct": -4.6,
-   "sql_trend_pct": -4.6,
+   "job_trend_pct": -21.6,
+   "sql_trend_pct": -21.6,
    "verdict": "MATCH"
   },
   {
    "site_id": "11303000",
-   "job_mean_30": 588.87,
-   "sql_mean_30": 588.87,
+   "job_mean_30": 599.3,
+   "sql_mean_30": 599.3,
    "job_min_30": 184.0,
    "sql_min_30": 184.0,
    "job_max_30": 1050.0,
    "sql_max_30": 1050.0,
-   "job_trend_pct": 3.0,
-   "sql_trend_pct": 3.0,
+   "job_trend_pct": 3.9,
+   "sql_trend_pct": 3.9,
    "verdict": "MATCH"
   }
  ],
@@ -189,6 +189,254 @@
   }
  ],
  "recent_revisions": [
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-26",
+   "old_cfs": 236.0,
+   "new_cfs": 218.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-25",
+   "old_cfs": 415.0,
+   "new_cfs": 431.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-24",
+   "old_cfs": 716.0,
+   "new_cfs": 721.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-23",
+   "old_cfs": 1080.0,
+   "new_cfs": 1070.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-22",
+   "old_cfs": 919.0,
+   "new_cfs": 913.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-21",
+   "old_cfs": 513.0,
+   "new_cfs": 527.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-20",
+   "old_cfs": 222.0,
+   "new_cfs": 200.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-19",
+   "old_cfs": 490.0,
+   "new_cfs": 502.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-18",
+   "old_cfs": 1110.0,
+   "new_cfs": 1090.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-17",
+   "old_cfs": 1660.0,
+   "new_cfs": 1800.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-16",
+   "old_cfs": 1210.0,
+   "new_cfs": 1220.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-15",
+   "old_cfs": 573.0,
+   "new_cfs": 622.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-14",
+   "old_cfs": 258.0,
+   "new_cfs": 247.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-13",
+   "old_cfs": 237.0,
+   "new_cfs": 220.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-12",
+   "old_cfs": 239.0,
+   "new_cfs": 222.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-11",
+   "old_cfs": 237.0,
+   "new_cfs": 220.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-10",
+   "old_cfs": 236.0,
+   "new_cfs": 219.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-09",
+   "old_cfs": 235.0,
+   "new_cfs": 217.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-08",
+   "old_cfs": 237.0,
+   "new_cfs": 220.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-07",
+   "old_cfs": 237.0,
+   "new_cfs": 220.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-06",
+   "old_cfs": 238.0,
+   "new_cfs": 221.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-05",
+   "old_cfs": 238.0,
+   "new_cfs": 221.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-04",
+   "old_cfs": 238.0,
+   "new_cfs": 222.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-03",
+   "old_cfs": 217.0,
+   "new_cfs": 194.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-02",
+   "old_cfs": 329.0,
+   "new_cfs": 342.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-10-01",
+   "old_cfs": 326.0,
+   "new_cfs": 362.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-09-30",
+   "old_cfs": 171.0,
+   "new_cfs": 175.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-09-01",
+   "old_cfs": 172.0,
+   "new_cfs": 171.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-08-31",
+   "old_cfs": 172.0,
+   "new_cfs": 171.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-08-30",
+   "old_cfs": 172.0,
+   "new_cfs": 171.0,
+   "seen_on": "2026-10-28"
+  },
+  {
+   "short_name": "Tuolumne R bl La Grange",
+   "site_id": "11289650",
+   "flow_date": "2026-08-29",
+   "old_cfs": 172.0,
+   "new_cfs": 171.0,
+   "seen_on": "2026-10-28"
+  },
   {
    "short_name": "Tuolumne R bl La Grange",
    "site_id": "11289650",
@@ -419,230 +667,6 @@
    "flow_date": "2026-09-05",
    "old_cfs": 188.0,
    "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-09-04",
-   "old_cfs": 186.0,
-   "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-09-03",
-   "old_cfs": 186.0,
-   "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-09-02",
-   "old_cfs": 189.0,
-   "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-09-01",
-   "old_cfs": 190.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-31",
-   "old_cfs": 192.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-30",
-   "old_cfs": 190.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-29",
-   "old_cfs": 188.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-28",
-   "old_cfs": 189.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-27",
-   "old_cfs": 187.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-26",
-   "old_cfs": 185.0,
-   "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-25",
-   "old_cfs": 186.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-24",
-   "old_cfs": 189.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-23",
-   "old_cfs": 187.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-22",
-   "old_cfs": 187.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-21",
-   "old_cfs": 186.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-20",
-   "old_cfs": 192.0,
-   "new_cfs": 173.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-19",
-   "old_cfs": 204.0,
-   "new_cfs": 175.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-18",
-   "old_cfs": 192.0,
-   "new_cfs": 173.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-17",
-   "old_cfs": 180.0,
-   "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-16",
-   "old_cfs": 180.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-15",
-   "old_cfs": 179.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-14",
-   "old_cfs": 179.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-13",
-   "old_cfs": 178.0,
-   "new_cfs": 172.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-12",
-   "old_cfs": 175.0,
-   "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-11",
-   "old_cfs": 173.0,
-   "new_cfs": 171.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-10",
-   "old_cfs": 171.0,
-   "new_cfs": 170.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-09",
-   "old_cfs": 171.0,
-   "new_cfs": 170.0,
-   "seen_on": "2026-10-05"
-  },
-  {
-   "short_name": "Tuolumne R bl La Grange",
-   "site_id": "11289650",
-   "flow_date": "2026-08-08",
-   "old_cfs": 171.0,
-   "new_cfs": 170.0,
    "seen_on": "2026-10-05"
   }
  ]
