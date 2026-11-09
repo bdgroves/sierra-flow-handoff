@@ -1,58 +1,58 @@
 {
- "run_date": "2026-11-08",
- "nights_loaded": 37,
- "daily_rows": 776,
- "revisions": 153,
+ "run_date": "2026-11-09",
+ "nights_loaded": 38,
+ "daily_rows": 784,
+ "revisions": 155,
  "server": "Microsoft SQL Server 2022 (RTM-CU27-GDR) (KB5126934) - 16.0.4305.5 (X64) \n\tOct  2 2026 17:28:11 \n\tCopyright (C) 2022 Microsoft Corporation\n\tDeveloper Edition (64-bit) on Linux (Ubuntu 22.04.5 LTS) <X64>",
- "gage_nights_checked": 296,
- "gage_nights_matched": 296,
+ "gage_nights_checked": 304,
+ "gage_nights_matched": 304,
  "agreement": [
   {
    "site_id": "11264500",
-   "job_mean_30": 8.65,
-   "sql_mean_30": 8.65,
+   "job_mean_30": 9.06,
+   "sql_mean_30": 9.06,
    "job_min_30": 3.41,
    "sql_min_30": 3.41,
    "job_max_30": 23.8,
    "sql_max_30": 23.8,
-   "job_trend_pct": 164.5,
-   "sql_trend_pct": 164.5,
+   "job_trend_pct": 89.1,
+   "sql_trend_pct": 89.1,
    "verdict": "MATCH"
   },
   {
    "site_id": "11266500",
-   "job_mean_30": 19.24,
-   "sql_mean_30": 19.24,
+   "job_mean_30": 19.65,
+   "sql_mean_30": 19.65,
    "job_min_30": 13.6,
    "sql_min_30": 13.6,
    "job_max_30": 36.2,
    "sql_max_30": 36.2,
-   "job_trend_pct": 62.5,
-   "sql_trend_pct": 62.5,
+   "job_trend_pct": 47.8,
+   "sql_trend_pct": 47.8,
    "verdict": "MATCH"
   },
   {
    "site_id": "11274790",
-   "job_mean_30": 13.23,
-   "sql_mean_30": 13.23,
+   "job_mean_30": 13.54,
+   "sql_mean_30": 13.54,
    "job_min_30": 6.8,
    "sql_min_30": 6.8,
    "job_max_30": 39.6,
    "sql_max_30": 39.6,
-   "job_trend_pct": 95.8,
-   "sql_trend_pct": 95.8,
+   "job_trend_pct": 31.0,
+   "sql_trend_pct": 31.0,
    "verdict": "MATCH"
   },
   {
    "site_id": "11276500",
-   "job_mean_30": 56.36,
-   "sql_mean_30": 56.36,
+   "job_mean_30": 56.29,
+   "sql_mean_30": 56.29,
    "job_min_30": 53.9,
    "sql_min_30": 53.9,
    "job_max_30": 61.2,
    "sql_max_30": 61.2,
-   "job_trend_pct": -1.7,
-   "sql_trend_pct": -1.7,
+   "job_trend_pct": -2.0,
+   "sql_trend_pct": -2.0,
    "verdict": "MATCH"
   },
   {
@@ -69,38 +69,38 @@
   },
   {
    "site_id": "11289650",
-   "job_mean_30": 436.0,
-   "sql_mean_30": 436.0,
+   "job_mean_30": 435.2,
+   "sql_mean_30": 435.2,
    "job_min_30": 192.0,
    "sql_min_30": 192.0,
    "job_max_30": 1800.0,
    "sql_max_30": 1800.0,
-   "job_trend_pct": -20.4,
-   "sql_trend_pct": -20.4,
+   "job_trend_pct": -7.7,
+   "sql_trend_pct": -7.7,
    "verdict": "MATCH"
   },
   {
    "site_id": "11290000",
-   "job_mean_30": 473.77,
-   "sql_mean_30": 473.77,
-   "job_min_30": 157.0,
-   "sql_min_30": 157.0,
+   "job_mean_30": 471.47,
+   "sql_mean_30": 471.47,
+   "job_min_30": 152.0,
+   "sql_min_30": 152.0,
    "job_max_30": 1720.0,
    "sql_max_30": 1720.0,
-   "job_trend_pct": -52.8,
-   "sql_trend_pct": -52.8,
+   "job_trend_pct": -41.0,
+   "sql_trend_pct": -41.0,
    "verdict": "MATCH"
   },
   {
    "site_id": "11303000",
-   "job_mean_30": 646.7,
-   "sql_mean_30": 646.7,
+   "job_mean_30": 636.53,
+   "sql_mean_30": 636.53,
    "job_min_30": 253.0,
    "sql_min_30": 253.0,
    "job_max_30": 1050.0,
    "sql_max_30": 1050.0,
-   "job_trend_pct": -34.3,
-   "sql_trend_pct": -34.3,
+   "job_trend_pct": -45.8,
+   "sql_trend_pct": -45.8,
    "verdict": "MATCH"
   }
  ],
@@ -189,6 +189,22 @@
   }
  ],
  "recent_revisions": [
+  {
+   "short_name": "Tuolumne R Grand Canyon",
+   "site_id": "11274790",
+   "flow_date": "2026-10-05",
+   "old_cfs": 7.44,
+   "new_cfs": 7.43,
+   "seen_on": "2026-11-09"
+  },
+  {
+   "short_name": "Tuolumne R Grand Canyon",
+   "site_id": "11274790",
+   "flow_date": "2026-09-30",
+   "old_cfs": 8.35,
+   "new_cfs": 8.33,
+   "seen_on": "2026-11-09"
+  },
   {
    "short_name": "Tuolumne R nr Hetch Hetchy",
    "site_id": "11276500",
@@ -651,22 +667,6 @@
    "flow_date": "2026-09-11",
    "old_cfs": 9.07,
    "new_cfs": 9.07,
-   "seen_on": "2026-11-03"
-  },
-  {
-   "short_name": "Merced R at Happy Isles",
-   "site_id": "11264500",
-   "flow_date": "2026-09-10",
-   "old_cfs": 9.75,
-   "new_cfs": 9.75,
-   "seen_on": "2026-11-03"
-  },
-  {
-   "short_name": "Merced R at Happy Isles",
-   "site_id": "11264500",
-   "flow_date": "2026-09-09",
-   "old_cfs": 10.5,
-   "new_cfs": 10.5,
    "seen_on": "2026-11-03"
   }
  ]

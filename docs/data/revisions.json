@@ -1,6 +1,6 @@
 {
- "nights": 38,
- "gage_days": 776,
+ "nights": 39,
+ "gage_days": 784,
  "changes": [
   {
    "night": "2026-10-05",
@@ -793,6 +793,24 @@
    "first": 236.0,
    "old": 236.0,
    "new": 218.0
+  },
+  {
+   "night": "2026-11-09",
+   "site_id": "11274790",
+   "name": "Tuolumne R Grand Canyon",
+   "date": "2026-09-30",
+   "first": 8.35,
+   "old": 8.35,
+   "new": 8.33
+  },
+  {
+   "night": "2026-11-09",
+   "site_id": "11274790",
+   "name": "Tuolumne R Grand Canyon",
+   "date": "2026-10-05",
+   "first": 7.44,
+   "old": 7.44,
+   "new": 7.43
   }
  ]
 }
