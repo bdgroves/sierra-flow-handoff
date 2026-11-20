@@ -2,7 +2,7 @@
 
                                               SIERRA NEVADA WATERSHED ANALYSIS SYSTEM
                                             USGS STREAMFLOW DATA PROCESSING REPORT  V3.0
-                                                  RUN 2026-11-19 22:09:52 UTC
+                                                  RUN 2026-11-20 21:49:16 UTC
 
 ====================================================================================================================================
 
@@ -11,43 +11,43 @@ SECTION I: LATEST DAILY MEAN VS NORMAL FOR THE DATE
 
   SITE ID  STATION                    DATE             CFS      P10      P25   MEDIAN      P75      P90    % MED  CLASS
 ------------------------------------------------------------------------------------------------------------------------------------
-  11274790 Tuolumne R Grand Canyon    2026-11-18     34.00     9.38    14.00    51.60   179.00   254.20    65.9%  NORMAL
-  11276500 Tuolumne R nr Hetch Hetchy 2026-11-18     55.20    37.80    53.18    60.00    63.53    66.00    92.0%  NORMAL
-  11284400 Big Creek nr Groveland     2026-11-18      0.00     0.00     0.00     0.00     0.03     0.46      --   NORMAL
-  11289650 Tuolumne R bl La Grange    2026-11-18    193.00   167.50   176.00   241.50   357.50   369.80    79.9%  NORMAL
-  11290000 Tuolumne R at Modesto      2026-11-18    204.00   178.00   210.00   304.00   429.75   473.90    67.1%  BELOW NORMAL
+  11274790 Tuolumne R Grand Canyon    2026-11-19     60.80     9.45    14.40    51.60   172.50   251.80   117.8%  NORMAL
+  11276500 Tuolumne R nr Hetch Hetchy 2026-11-19     56.90    37.80    53.10    60.00    63.23    66.00    94.8%  NORMAL
+  11284400 Big Creek nr Groveland     2026-11-19      0.27     0.00     0.00     0.00     0.04     0.66      --   ABOVE NORMAL
+  11289650 Tuolumne R bl La Grange    2026-11-19    192.00   167.50   176.00   243.50   356.25   368.00    78.9%  NORMAL
+  11290000 Tuolumne R at Modesto      2026-11-19    261.00   180.10   210.75   304.00   433.00   461.70    85.9%  NORMAL
   11264500 Merced R at Happy Isles    2026-11-18     33.40     8.45    14.00    28.40    78.58   134.90   117.6%  NORMAL
-  11266500 Merced R at Pohono Bridge  2026-11-18     44.60    18.61    26.00    48.45   133.50   240.20    92.1%  NORMAL
-  11303000 Stanislaus R at Ripon      2026-11-18    314.00   207.20   232.00   308.00   408.00   664.50   101.9%  NORMAL
+  11266500 Merced R at Pohono Bridge  2026-11-19     63.70    18.72    27.00    51.90   137.25   243.70   122.7%  NORMAL
+  11303000 Stanislaus R at Ripon      2026-11-19    373.00   205.20   230.75   306.50   408.00   654.20   121.7%  NORMAL
 
 SECTION II: LAST 30 DAYS VS NORMAL FOR THOSE DATES
   % NORMAL = 30-DAY TOTAL FLOW / TOTAL OF THE DAILY MEDIANS. TREND = LAST 7 DAYS VS THE 7 BEFORE, +/-10% OR MORE.
 
   SITE ID   STATION                    DAYS    MEAN CFS    MIN CFS    MAX CFS  % NORMAL DAYS<P10 DAYS>P90  7-DAY TREND
 ------------------------------------------------------------------------------------------------------------------------------------
-  11274790  Tuolumne R Grand Canyon      30       19.34       6.90      40.60     77.1%        2        0  RISING      69.8%
-  11276500  Tuolumne R nr Hetch Hetchy   30       55.49      53.90      61.20     92.5%        0        0  STEADY
-  11284400  Big Creek nr Groveland       30        0.00       0.00       0.00       --         0        0  STEADY
-  11289650  Tuolumne R bl La Grange      30      287.40     190.00    1070.00     96.5%        0        2  STEADY
-  11290000  Tuolumne R at Modesto        30      319.90     146.00    1100.00     82.1%       14        3  RISING      10.0%
+  11274790  Tuolumne R Grand Canyon      30       21.14       7.05      60.80     80.3%        1        0  RISING     118.8%
+  11276500  Tuolumne R nr Hetch Hetchy   30       55.52      53.90      61.20     92.5%        0        0  STEADY
+  11284400  Big Creek nr Groveland       30        0.01       0.00       0.27       --         0        0  STEADY
+  11289650  Tuolumne R bl La Grange      30      287.13     190.00    1070.00     97.6%        0        2  STEADY
+  11290000  Tuolumne R at Modesto        30      301.33     146.00    1100.00     78.6%       14        3  RISING      23.1%
   11264500  Merced R at Happy Isles      30       15.51       3.41      35.10     88.7%        2        0  RISING      59.1%
-  11266500  Merced R at Pohono Bridge    30       26.01      14.10      45.90     71.6%        0        0  RISING      33.8%
-  11303000  Stanislaus R at Ripon        30      510.63     253.00    1050.00     95.4%        2        0  STEADY
+  11266500  Merced R at Pohono Bridge    30       27.66      14.20      63.70     74.5%        0        0  RISING      55.8%
+  11303000  Stanislaus R at Ripon        30      505.33     253.00    1050.00     96.6%        2        0  STEADY
 
 SECTION III: WATERSHED BASINS
   GAGES ON ONE RIVER MEASURE THE SAME WATER, SO THEY ARE NOT ADDED. THE LOWEST GAGE IS WHAT LEAVES THE BASIN.
 
   BASIN       GAGES   LOWEST GAGE (BASIN OUTFLOW)       CFS  CLASS             MUCH BELOW  BELOW NORMAL  ABOVE MUCH ABOVE
 ------------------------------------------------------------------------------------------------------------------------------------
-  TUOLUMNE      5     Tuolumne R at Modesto          204.00  BELOW NORMAL               0      1      4      0          0
-  MERCED        2     Merced R at Pohono Bridge       44.60  NORMAL                     0      0      2      0          0
-  STANISLAUS    1     Stanislaus R at Ripon          314.00  NORMAL                     0      0      1      0          0
+  TUOLUMNE      5     Tuolumne R at Modesto          261.00  NORMAL                     0      0      4      1          0
+  MERCED        2     Merced R at Pohono Bridge       63.70  NORMAL                     0      0      2      0          0
+  STANISLAUS    1     Stanislaus R at Ripon          373.00  NORMAL                     0      0      1      0          0
 
 SECTION IV: RUN SUMMARY
 
     GAGES PROCESSED ..................     8
     DAILY NORMALS READ ...............  2928
-    DAILY MEANS READ .................   480
+    DAILY MEANS READ .................   479
     RECORDS SKIPPED (INVALID) ........     0
     GAGES STALE OR WITHOUT DATA ......     0
     WATERSHED BASINS .................     3
