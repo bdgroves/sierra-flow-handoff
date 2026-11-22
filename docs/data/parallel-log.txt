@@ -1,4 +1,4 @@
-JOB PARALLEL   2026-11-22 21:14:53 UTC
+JOB PARALLEL   2026-11-22 22:29:02 UTC
 OLD            cobc (GnuCOBOL) 3.1.2.0 · bdgroves/sierra-flow-cobol @ 780c1df
 NEW            sierraflow (C#) · .NET 8.0.428
 
@@ -65,6 +65,7 @@ CASE edge     future-date      RC=0004  MATCH     77 lines
 CASE edge     out-of-order     RC=0000  MATCH     76 lines
 CASE edge     thirteen-gages   RC=0004  MATCH     89 lines
 CASE normals  synthetic-30yr   RC=0000  MATCH   1105 lines
+CASE normals  usgs-30yr        RC=0000  MATCH   2935 lines
 CASE normals  no-history       RC=0012  MATCH      3 lines
 
-JOB PARALLEL   ENDED  64 OF 64 CASES MATCH  5,836 LINES COMPARED
+JOB PARALLEL   ENDED  65 OF 65 CASES MATCH  8,771 LINES COMPARED
