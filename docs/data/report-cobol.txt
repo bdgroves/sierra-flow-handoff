@@ -2,7 +2,7 @@
 
                                               SIERRA NEVADA WATERSHED ANALYSIS SYSTEM
                                             USGS STREAMFLOW DATA PROCESSING REPORT  V3.0
-                                                  RUN 2026-11-24 23:28:44 UTC
+                                                  RUN 2026-11-25 23:06:06 UTC
 
 ====================================================================================================================================
 
@@ -11,37 +11,37 @@ SECTION I: LATEST DAILY MEAN VS NORMAL FOR THE DATE
 
   SITE ID  STATION                    DATE             CFS      P10      P25   MEDIAN      P75      P90    % MED  CLASS
 ------------------------------------------------------------------------------------------------------------------------------------
-  11274790 Tuolumne R Grand Canyon    2026-11-23     50.40     9.80    24.10    49.90   142.50   237.00   101.0%  NORMAL
-  11276500 Tuolumne R nr Hetch Hetchy 2026-11-23     55.00    37.80    52.53    59.55    63.00    68.09    92.4%  NORMAL
-  11284400 Big Creek nr Groveland     2026-11-23      0.06     0.00     0.00     0.00     0.22     0.70      --   NORMAL
-  11289650 Tuolumne R bl La Grange    2026-11-23    192.00   164.10   176.00   243.00   354.00   370.00    79.0%  NORMAL
-  11290000 Tuolumne R at Modesto      2026-11-23    170.00   180.00   212.00   303.50   433.75   457.80    56.0%  MUCH BELOW NORMAL
-  11264500 Merced R at Happy Isles    2026-11-23     51.70     8.63    18.00    33.60    69.65   111.00   153.9%  NORMAL
-  11266500 Merced R at Pohono Bridge  2026-11-23     71.10    21.83    30.90    55.80   125.25   238.90   127.4%  NORMAL
-  11303000 Stanislaus R at Ripon      2026-11-23    210.00   207.30   226.50   298.00   406.00   617.30    70.5%  BELOW NORMAL
+  11274790 Tuolumne R Grand Canyon    2026-11-24     57.00     9.74    26.60    49.40   138.00   252.20   115.4%  NORMAL
+  11276500 Tuolumne R nr Hetch Hetchy 2026-11-24     55.00    37.84    52.28    59.60    63.00    69.20    92.3%  NORMAL
+  11284400 Big Creek nr Groveland     2026-11-24      0.04     0.00     0.00     0.00     0.24     1.10      --   NORMAL
+  11289650 Tuolumne R bl La Grange    2026-11-24    194.00   164.00   176.00   243.00   354.00   377.00    79.8%  NORMAL
+  11290000 Tuolumne R at Modesto      2026-11-24    160.00   179.10   212.00   303.50   433.00   461.00    52.7%  MUCH BELOW NORMAL
+  11264500 Merced R at Happy Isles    2026-11-24     50.50     8.63    18.00    33.45    67.80   114.60   151.0%  NORMAL
+  11266500 Merced R at Pohono Bridge  2026-11-24     73.70    22.11    31.00    56.40   121.25   243.50   130.7%  NORMAL
+  11303000 Stanislaus R at Ripon      2026-11-24    206.00   207.10   224.75   297.00   406.00   617.30    69.4%  MUCH BELOW NORMAL
 
 SECTION II: LAST 30 DAYS VS NORMAL FOR THOSE DATES
   % NORMAL = 30-DAY TOTAL FLOW / TOTAL OF THE DAILY MEDIANS. TREND = LAST 7 DAYS VS THE 7 BEFORE, +/-10% OR MORE.
 
   SITE ID   STATION                    DAYS    MEAN CFS    MIN CFS    MAX CFS  % NORMAL DAYS<P10 DAYS>P90  7-DAY TREND
 ------------------------------------------------------------------------------------------------------------------------------------
-  11274790  Tuolumne R Grand Canyon      30       25.86      10.70      60.80     82.5%        0        0  RISING     107.1%
-  11276500  Tuolumne R nr Hetch Hetchy   30       55.38      53.90      61.20     92.3%        0        0  STEADY
-  11284400  Big Creek nr Groveland       30        0.03       0.00       0.35       --         0        0  STEADY
-  11289650  Tuolumne R bl La Grange      30      205.10     190.00     431.00     73.2%        0        0  STEADY
-  11290000  Tuolumne R at Modesto        30      226.43     146.00     873.00     63.4%       17        1  RISING      18.4%
-  11264500  Merced R at Happy Isles      30       20.14       6.69      53.80    103.2%        0        0  RISING     121.0%
-  11266500  Merced R at Pohono Bridge    30       33.90      17.60      71.10     83.2%        0        0  RISING      89.0%
-  11303000  Stanislaus R at Ripon        30      440.47     210.00    1050.00     96.6%        2        0  STEADY
+  11274790  Tuolumne R Grand Canyon      30       27.28      10.70      60.80     83.8%        0        0  RISING      88.1%
+  11276500  Tuolumne R nr Hetch Hetchy   30       55.40      53.90      61.20     92.4%        0        0  STEADY
+  11284400  Big Creek nr Groveland       30        0.04       0.00       0.35       --         0        0  STEADY
+  11289650  Tuolumne R bl La Grange      30      197.20     190.00     226.00     71.3%        0        0  STEADY
+  11290000  Tuolumne R at Modesto        30      202.67     146.00     588.00     57.7%       18        0  RISING      16.5%
+  11264500  Merced R at Happy Isles      30       21.52       6.69      53.80    106.2%        0        0  RISING     126.8%
+  11266500  Merced R at Pohono Bridge    30       35.74      17.60      73.70     85.7%        0        0  RISING      84.9%
+  11303000  Stanislaus R at Ripon        30      417.70     206.00    1050.00     95.7%        3        0  FALLING    -12.5%
 
 SECTION III: WATERSHED BASINS
   GAGES ON ONE RIVER MEASURE THE SAME WATER, SO THEY ARE NOT ADDED. THE LOWEST GAGE IS WHAT LEAVES THE BASIN.
 
   BASIN       GAGES   LOWEST GAGE (BASIN OUTFLOW)       CFS  CLASS             MUCH BELOW  BELOW NORMAL  ABOVE MUCH ABOVE
 ------------------------------------------------------------------------------------------------------------------------------------
-  TUOLUMNE      5     Tuolumne R at Modesto          170.00  MUCH BELOW NORMAL          1      0      4      0          0
-  MERCED        2     Merced R at Pohono Bridge       71.10  NORMAL                     0      0      2      0          0
-  STANISLAUS    1     Stanislaus R at Ripon          210.00  BELOW NORMAL               0      1      0      0          0
+  TUOLUMNE      5     Tuolumne R at Modesto          160.00  MUCH BELOW NORMAL          1      0      4      0          0
+  MERCED        2     Merced R at Pohono Bridge       73.70  NORMAL                     0      0      2      0          0
+  STANISLAUS    1     Stanislaus R at Ripon          206.00  MUCH BELOW NORMAL          1      0      0      0          0
 
 SECTION IV: RUN SUMMARY
 
